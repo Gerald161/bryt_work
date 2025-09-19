@@ -1071,34 +1071,35 @@
         const internList = document.querySelector('.intern-list');
         
         // Sample data - replace with your actual data
-        const interns = [
-            { name: "Emmanuel Osei", position: "Marketing Intern", status: "active" },
-            { name: "Ackah Samuel", position: "IT Intern", status: "away" },
-            { name: "David David", position: "Finance Intern", status: "offline" },
-            { name: "Stephen Sasu", position: "HR Intern", status: "active" }
-        ];
+        // const interns = [
+        //   { name: "Emmanuel Osei", position: "Marketing Intern", status: "active" },
+        //   { name: "Ackah Samuel", position: "IT Intern", status: "away" },
+        //   { name: "David David", position: "Finance Intern", status: "offline" },
+        //   { name: "Stephen Sasu", position: "HR Intern", status: "active" }
+        // ];
         
-        interns.forEach(intern => {
-            const initials = intern.name.split(' ').map(n => n[0]).join('');
-            const statusClass = intern.status === "active" ? "" : 
-                               intern.status === "away" ? "away" : "offline";
+        // interns.forEach(intern => {
+        //     const initials = intern.name.split(' ').map(n => n[0]).join('');
+        //     const statusClass = intern.status === "active" ? "" : 
+        //     intern.status === "away" ? "away" : "offline";
             
-            const internItem = document.createElement('li');
-            internItem.className = 'intern-item';
-            internItem.innerHTML = `
-                <div class="intern-avatar">${initials}</div>
-                <div class="intern-info">
-                    <div class="intern-name">${intern.name}</div>
-                    <div class="intern-position">${intern.position}</div>
-                </div>
-                <div class="intern-status ${statusClass}"></div>
-            `;
+        //     const internItem = document.createElement('li');
+        //     internItem.className = 'intern-item';
+        //     internItem.innerHTML = `
+        //         <div class="intern-avatar">${initials}</div>
+        //         <div class="intern-info">
+        //             <div class="intern-name">${intern.name}</div>
+        //             <div class="intern-position">${intern.position}</div>
+        //         </div>
+        //         <div class="intern-status ${statusClass}"></div>
+        //     `;
             
-            internList.appendChild(internItem);
-        });
+        //     internList.appendChild(internItem);
+        // });
     });
   </script>
 
   <script src="./js/dashboard_info.js"></script>
+  <script src="./js/active_interns.js"></script>
 </body>
 </html>

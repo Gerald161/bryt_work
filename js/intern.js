@@ -332,17 +332,22 @@ function completeSave(newIntern) {
     if (editingIndex !== null){
         // Update existing intern
         interns[editingIndex] = newIntern;
+
+        let submissions = JSON.parse(localStorage.getItem("submissions")) || [];
+
+        submissions[editingIndex] = newIntern;
+
+        localStorage.setItem("submissions", JSON.stringify(submissions));
     } else {
         // Add new intern
         interns.unshift(newIntern);
+        // storing info to local storage
+        let submissions = JSON.parse(localStorage.getItem("submissions")) || [];
+
+        submissions.unshift(newIntern);
+
+        localStorage.setItem("submissions", JSON.stringify(submissions));
     }
-
-    // storing info to local storage
-    let storedData = JSON.parse(localStorage.getItem("submissions")) || [];
-
-    storedData.unshift(newIntern);
-
-    localStorage.setItem("submissions", JSON.stringify(storedData));
     
     closeModal();
     renderList();
