@@ -1,297 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Attendance Management - Interns Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SICLife Interns</title>
   <link rel="stylesheet" href="./css/attendance.css">
-  <style>
-    /* Additional styles for the new sidebar navigation */
-    .sidebar-nav {
-      margin-bottom: 24px;
-    }
-    
-    .sidebar-nav-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 16px;
-      color: #4a5568;
-      text-decoration: none;
-      border-radius: 6px;
-      margin-bottom: 4px;
-      transition: all 0.2s ease;
-    }
-    
-    .sidebar-nav-item:hover {
-      background-color: #edf2f7;
-      color: #2d3748;
-    }
-    
-    .sidebar-nav-item.active {
-      background-color: #ebf8ff;
-      color: #3182ce;
-      font-weight: 500;
-    }
-    
-    .sidebar-nav-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 12px;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-    }
-    
-    .sidebar-nav-text {
-      font-size: 14px;
-    }
-    
-    .sidebar-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #4a5568;
-      margin-bottom: 12px;
-      display: block;
-    }
-    
-    .sidebar-card {
-      background: white;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    }
-
-    /* Mobile Navigation Styles */
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      padding: 8px 0;
-      z-index: 1000;
-    }
-
-    .mobile-nav-items {
-      display: flex;
-      justify-content: space-around;
-      width: 100%;
-    }
-
-    .mobile-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      color: #4a5568;
-      font-size: 12px;
-      padding: 8px 0;
-      flex: 1;
-    }
-
-    .mobile-nav-item.active {
-      color: #3182ce;
-    }
-
-    .mobile-nav-icon {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 4px;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-    }
-
-    /* Mobile Quick Actions */
-    .mobile-actions {
-      display: none;
-      position: fixed;
-      bottom: 72px;
-      left: 0;
-      right: 0;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      padding: 12px;
-      z-index: 999;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    }
-
-    .mobile-actions-inner {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-    }
-
-    .mobile-actions-btn {
-      flex: 1;
-      min-width: 120px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #3182ce;
-      background-color: #ebf8ff;
-      color: #3182ce;
-      font-size: 14px;
-      white-space: nowrap;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .mobile-actions-btn.primary {
-      background-color: #3182ce;
-      color: white;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        display: none;
-      }
-
-      .main-content {
-        margin-left: 0;
-        padding: 16px;
-        padding-bottom: 144px; /* Space for mobile nav and actions */
-      }
-
-      .mobile-nav {
-        display: flex;
-      }
-
-      .mobile-actions {
-        display: block;
-      }
-
-      .topbar-title {
-        font-size: 18px;
-      }
-
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .view-options {
-        margin-top: 12px;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        padding-bottom: 8px;
-      }
-
-      .view-btn {
-        padding: 8px 12px;
-        font-size: 14px;
-      }
-
-      .attendance-table {
-        font-size: 14px;
-      }
-
-      .attendance-table th, 
-      .attendance-table td {
-        padding: 8px;
-      }
-
-      .modal-content {
-        width: 90%;
-        max-width: 100%;
-      }
-    }
-
-    @media (min-width: 769px) {
-      .mobile-nav,
-      .mobile-actions {
-        display: none;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./css/intern.css">
 </head>
 <body>
-  <!-- Offline-style Header -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <button class="back-btn" id="backBtn" title="Go back">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        Back
-      </button>
-      <div class="topbar-logo">
-        <img src="images/sic logo.jpg" alt="Company Logo" class="topbar-logo-img">
-        <span class="topbar-title">Attendance System</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Container -->
-  <div class="container">
-    <!-- Sidebar with Navigation Menu -->
+  <div class="dashboard-wrap">
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <nav class="sidebar-nav">
-        <a href="index.html" class="sidebar-nav-item">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span class="sidebar-nav-text">Dashboard</span>
+      <div class="brand-logo-container">
+        <img src="images/sic logo.jpg" alt="SICLife Logo" class="brand-logo">
+      </div>
+      <nav>
+        <a href="index.html">
+          <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M4 10v10h6v-6h4v6h6V10"/></svg>
+          <span>Dashboard</span>
         </a>
-        <a href="intern.html" class="sidebar-nav-item">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          <span class="sidebar-nav-text">Intern</span>
+        <a href="intern.html">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="4"/><circle cx="17" cy="8" r="3"/><path d="M2 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"/><path d="M17 20v-1a3 3 0 00-2-2.83"/></svg>
+          <span>Interns</span>
         </a>
-        <a href="#" class="sidebar-nav-item active">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          <span class="sidebar-nav-text">Attendance</span>
+        <a href="attendance.html" class="active">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Attendance</span>
         </a>
-        <a href="report.html" class="sidebar-nav-item">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-          <span class="sidebar-nav-text">Reports</span>
-        </a>
-        <a href="settings.html" class="sidebar-nav-item">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2h-.09a1.65 1.65 0 0 0-1.51 1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-1.82-.33l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span class="sidebar-nav-text">Settings</span>
+        <a href="settings.html">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Settings</span>
         </a>
       </nav>
-
-      <!-- Quick Actions Card -->
-      <div class="sidebar-card">
-        <h3 class="sidebar-title">Quick Actions</h3>
-        <button class="btn btn-primary" style="width: 100%; margin-bottom: 8px;" id="markAttendanceBtn">Mark Attendance</button>
-        <button class="btn btn-outline" style="display:none; width: 100%; margin-bottom: 8px;" id="requestLeaveBtn">Request Leave</button>
-        <button class="btn btn-outline" style="display:none; width: 100%;" id="submitComplianceBtn">Submit Compliance</button>
-      </div>
-      
-      <!-- Reports Card -->
-      <div class="sidebar-card" style="display: none;">
-        <h3 class="sidebar-title">Reports</h3>
-        <button class="btn btn-primary" style="width: 100%; margin-bottom: 8px;" id="printWeeklyBtn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
-          </svg>
-          Print Weekly
-        </button>
-        <button class="btn btn-primary" style="width: 100%;" id="printMonthlyBtn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
-          </svg>
-          Print Monthly
-        </button>
-      </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="main-content">
-      <!-- Attendance Section -->
+    <main class="main">
+      <!-- Top Navigation -->
+      <nav class="top-nav">
+        <div class="search-bar">
+          <input type="text" placeholder="Search interns...">
+        </div>
+        <div class="user-menu">
+          <div class="profile-dropdown" id="profileDropdown">
+            <button class="profile-btn" id="profileBtn">
+              <span class="profile-avatar" id="profile_avatar">BA</span>
+              <span class="profile-name" id="user_name">Bright Amankwah-Opoku</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Profile
+              </a>
+              <a href="settings.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Settings
+              </a>
+              <span id="logout_button" href="index.html">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Logout
+              </span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       <div class="attendance-section">
         <div class="section-header">
           <h2 class="section-title">Attendance Records</h2>
@@ -381,43 +166,14 @@
           </table>
         </div>
       </div>
+
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">Quick Actions</h3>
+        <button class="btn btn-primary" style="width: 100%; margin-bottom: 8px;" id="markAttendanceBtn">Mark Attendance</button>
+        <button class="btn btn-outline" style="display:none; width: 100%; margin-bottom: 8px;" id="requestLeaveBtn">Request Leave</button>
+        <button class="btn btn-outline" style="display:none; width: 100%;" id="submitComplianceBtn">Submit Compliance</button>
+      </div>
     </main>
-  </div>
-
-  <!-- Mobile Quick Actions -->
-  <div class="mobile-actions">
-    <div class="mobile-actions-inner">
-      <button class="mobile-actions-btn primary" id="mobileMarkAttendanceBtn">Mark Attendance</button>
-      <!-- <button class="mobile-actions-btn" id="mobileRequestLeaveBtn">Request Leave</button>
-      <button class="mobile-actions-btn" id="mobileSubmitComplianceBtn">Submit Compliance</button> -->
-    </div>
-  </div>
-
-  <!-- Mobile Navigation -->
-  <nav class="mobile-nav">
-    <div class="mobile-nav-items">
-      <a href="index.html" class="mobile-nav-item">
-        <svg class="mobile-nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-        <span>Dashboard</span>
-      </a>
-      <a href="index.html" class="mobile-nav-item">
-        <svg class="mobile-nav-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-        <span>Intern</span>
-      </a>
-      <a href="attendance.html" class="mobile-nav-item active">
-        <svg class="mobile-nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        <span>Attendance</span>
-      </a>
-      <a href="report.html" class="mobile-nav-item">
-        <svg class="mobile-nav-icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-        <span>Reports</span>
-      </a>
-      <a href="settings.html" class="mobile-nav-item">
-        <svg class="mobile-nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2h-.09a1.65 1.65 0 0 0-1.51 1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-1.82-.33l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>Settings</span>
-      </a>
-    </div>
-  </nav>
 
   <!-- Mark Attendance Modal -->
   <div class="modal" id="markAttendanceModal">
@@ -465,492 +221,10 @@
       </div>
     </div>
   </div>
-
-  <!-- Request Leave Modal -->
-  <div class="modal" id="requestLeaveModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">Request Leave</div>
-        <button class="modal-close" id="closeRequestLeave">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Leave Type</label>
-          <select class="form-select" id="leaveType">
-            <option>Vacation</option>
-            <option>Sick Leave</option>
-            <option>Personal Day</option>
-            <option>Bereavement</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Start Date</label>
-          <input type="date" class="form-control" id="leaveStartDate">
-        </div>
-        <div class="form-group">
-          <label class="form-label">End Date</label>
-          <input type="date" class="form-control" id="leaveEndDate">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Reason</label>
-          <textarea class="form-control" id="leaveReason" rows="3" placeholder="Brief reason for leave"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Attachment (if any)</label>
-          <input type="file" class="form-control" id="leaveAttachment">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" id="cancelRequestLeave">Cancel</button>
-        <button class="btn btn-primary" id="submitLeaveRequest">Submit Request</button>
-      </div>
-    </div>
   </div>
 
-  <!-- Submit Compliance Modal -->
-  <div class="modal" id="submitComplianceModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">Submit Compliance</div>
-        <button class="modal-close" id="closeSubmitCompliance">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Compliance Type</label>
-          <select class="form-select" id="complianceType">
-            <option>Monthly Attendance Report</option>
-            <option>Labor Law Compliance</option>
-            <option>Work Hours Audit</option>
-            <option>Leave Balance Report</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Period</label>
-          <select class="form-select" id="compliancePeriod">
-            <option>July 2025</option>
-            <option>June 2025</option>
-            <option>May 2025</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Document</label>
-          <input type="file" class="form-control" id="complianceDocument">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Notes</label>
-          <textarea class="form-control" id="complianceNotes" rows="3" placeholder="Any additional information"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" id="cancelSubmitCompliance">Cancel</button>
-        <button class="btn btn-primary" id="submitCompliance">Submit</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let submissions = JSON.parse(localStorage.getItem("submissions")) || [];
-
-    // const employees = [
-    //   { id: 1, name: "Melissa Eshun" },
-    //   { id: 2, name: "Rahim Alhassan" },
-    //   { id: 3, name: "Joyce Osei" },
-    //   { id: 4, name: "Bismark Issah" },
-    //   { id: 5, name: "Kwame Mensah" }
-    // ];
-
-    const employees = submissions.map((sub, index) => ({
-      id: index + 1,
-      name: sub.name
-    }));
-
-    console.log(submissions)
-
-    // Attendance data storage
-    let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
-
-    // Back button functionality
-    document.getElementById('backBtn').addEventListener('click', function() {
-      window.history.back();
-    });
-
-    // Initialize the app
-    function initApp() {
-      // Set today's date in date pickers
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('attendanceDate').value = today;
-      document.getElementById('leaveStartDate').value = today;
-      document.getElementById('leaveEndDate').value = today;
-      
-      // Populate employee dropdown
-      const employeeSelect = document.getElementById('attendanceEmployee');
-      employees.forEach(employee => {
-        const option = document.createElement('option');
-        option.value = employee.id;
-        option.textContent = employee.name;
-        employeeSelect.appendChild(option);
-      });
-      
-      // Load initial data
-      loadDailyAttendance();
-      loadWeeklyAttendance();
-      loadMonthlyCalendar();
-
-      // Set up mobile action buttons
-      document.getElementById('mobileMarkAttendanceBtn').addEventListener('click', function() {
-        document.getElementById('markAttendanceBtn').click();
-      });
-      document.getElementById('mobileRequestLeaveBtn').addEventListener('click', function() {
-        document.getElementById('requestLeaveBtn').click();
-      });
-      document.getElementById('mobileSubmitComplianceBtn').addEventListener('click', function() {
-        document.getElementById('submitComplianceBtn').click();
-      });
-    }
-
-    // Load daily attendance data
-    function loadDailyAttendance() {
-      const today = new Date().toISOString().split('T')[0];
-      const tbody = document.querySelector('#dailyAttendanceTable tbody');
-      tbody.innerHTML = '';
-      
-      employees.forEach(employee => {
-        const row = document.createElement('tr');
-        const employeeAttendance = attendanceData.find(a => 
-          a.employeeId === employee.id && a.date === today
-        ) || { status: 'absent', checkIn: '', checkOut: '', hours: 0 };
-        
-        row.innerHTML = `
-          <td>${employee.name}</td>
-          <td><span class="status-badge status-${employeeAttendance.status}">${
-            employeeAttendance.status.charAt(0).toUpperCase() + employeeAttendance.status.slice(1)
-          }</span></td>
-          <td>${employeeAttendance.checkIn || '-'}</td>
-          <td>${employeeAttendance.checkOut || '-'}</td>
-          <td>${employeeAttendance.hours ? employeeAttendance.hours.toFixed(2) : '0.00'}</td>
-          <td>
-            <button class="edit-btn" data-id="${employee.id}">Edit</button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      // Add event listeners to edit buttons
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const employeeId = parseInt(this.dataset.id);
-          const employee = employees.find(e => e.id === employeeId);
-          const today = new Date().toISOString().split('T')[0];
-          const attendance = attendanceData.find(a => 
-            a.employeeId === employeeId && a.date === today
-          ) || { status: 'absent', checkIn: '', checkOut: '', hours: 0 };
-          
-          // Fill the form with existing data
-          document.getElementById('attendanceEmployee').value = employeeId;
-          document.getElementById('attendanceDate').value = today;
-          document.getElementById('attendanceStatus').value = attendance.status;
-          document.getElementById('checkinTime').value = attendance.checkIn || '09:00';
-          document.getElementById('checkoutTime').value = attendance.checkOut || '17:00';
-          document.getElementById('attendanceRemarks').value = attendance.remarks || '';
-          
-          // Show the modal
-          document.getElementById('markAttendanceModal').classList.add('open');
-        });
-      });
-    }
-
-    // Load weekly attendance data
-    function loadWeeklyAttendance() {
-      const tbody = document.querySelector('#weeklyAttendanceTable tbody');
-      tbody.innerHTML = '';
-      
-      // This is a simplified version - in a real app you would calculate based on actual data
-      employees.forEach(employee => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${employee.name}</td>
-          <td><span class="status-badge status-present">9.5h</span></td>
-          <td><span class="status-badge status-present">8.0h</span></td>
-          <td><span class="status-badge status-absent">0h</span></td>
-          <td><span class="status-badge status-present">9.0h</span></td>
-          <td><span class="status-badge status-present">9.25h</span></td>
-          <td>35.75h</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    // Load monthly calendar
-    function loadMonthlyCalendar() {
-      const tbody = document.querySelector('#monthlyCalendar tbody');
-      tbody.innerHTML = '';
-      
-      // Get current date
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth();
-      
-      // Get first day of month and total days in month
-      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-      
-      // Create calendar rows
-      let date = 1;
-      for (let i = 0; i < 6; i++) {
-        // Stop if we've processed all days
-        if (date > daysInMonth) break;
-        
-        const row = document.createElement('tr');
-        
-        // Create cells for each day of week
-        for (let j = 0; j < 7; j++) {
-          const cell = document.createElement('td');
-          
-          if (i === 0 && j < firstDay) {
-            // Empty cells before first day of month
-            cell.textContent = '';
-          } else if (date > daysInMonth) {
-            // Empty cells after last day of month
-            cell.textContent = '';
-          } else {
-            // Day of month
-            const dayElement = document.createElement('div');
-            dayElement.className = 'calendar-day';
-            dayElement.textContent = date;
-            
-            // Highlight today
-            if (date === currentDate.getDate() && currentMonth === currentDate.getMonth()) {
-              dayElement.classList.add('today');
-            }
-            
-            // Add attendance status if available
-            const attendanceForDay = attendanceData.find(a => {
-              const d = new Date(a.date);
-              return d.getDate() === date && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-            });
-            
-            if (attendanceForDay) {
-              dayElement.classList.add('has-attendance', attendanceForDay.status);
-            }
-            
-            cell.appendChild(dayElement);
-            date++;
-          }
-          
-          row.appendChild(cell);
-        }
-        
-        tbody.appendChild(row);
-      }
-    }
-
-    // View switching
-    const viewBtns = document.querySelectorAll('.view-btn');
-    viewBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Remove active class from all view buttons
-        viewBtns.forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
-        this.classList.add('active');
-        
-        // Hide all views
-        document.querySelectorAll('.view-content').forEach(view => {
-          view.style.display = 'none';
-        });
-        
-        // Show the selected view
-        const viewId = this.dataset.view + 'View';
-        document.getElementById(viewId).style.display = 'block';
-      });
-    });
-
-    // Print functionality
-    document.getElementById('printCurrentView').addEventListener('click', function() {
-      window.print();
-    });
-
-    document.getElementById('printWeeklyBtn').addEventListener('click', function() {
-      // Switch to weekly view and print
-      document.querySelector('.view-btn[data-view="weekly"]').click();
-      setTimeout(() => {
-        window.print();
-      }, 100);
-    });
-
-    document.getElementById('printMonthlyBtn').addEventListener('click', function() {
-      // Switch to monthly view and print
-      document.querySelector('.view-btn[data-view="monthly"]').click();
-      setTimeout(() => {
-        window.print();
-      }, 100);
-    });
-
-    // Modal handling
-    const markAttendanceModal = document.getElementById('markAttendanceModal');
-    const requestLeaveModal = document.getElementById('requestLeaveModal');
-    const submitComplianceModal = document.getElementById('submitComplianceModal');
-
-    // Open modals
-    document.getElementById('markAttendanceBtn').addEventListener('click', () => {
-      // Reset form
-      document.getElementById('attendanceEmployee').value = '';
-      document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('attendanceStatus').value = 'present';
-      document.getElementById('checkinTime').value = '09:00';
-      document.getElementById('checkoutTime').value = '17:00';
-      document.getElementById('attendanceRemarks').value = '';
-      
-      markAttendanceModal.classList.add('open');
-    });
-    document.getElementById('requestLeaveBtn').addEventListener('click', () => {
-      requestLeaveModal.classList.add('open');
-    });
-    document.getElementById('submitComplianceBtn').addEventListener('click', () => {
-      submitComplianceModal.classList.add('open');
-    });
-
-    // Close modals
-    document.getElementById('closeMarkAttendance').addEventListener('click', () => {
-      markAttendanceModal.classList.remove('open');
-    });
-    document.getElementById('closeRequestLeave').addEventListener('click', () => {
-      requestLeaveModal.classList.remove('open');
-    });
-    document.getElementById('closeSubmitCompliance').addEventListener('click', () => {
-      submitComplianceModal.classList.remove('open');
-    });
-
-    document.getElementById('cancelMarkAttendance').addEventListener('click', () => {
-      markAttendanceModal.classList.remove('open');
-    });
-    document.getElementById('cancelRequestLeave').addEventListener('click', () => {
-      requestLeaveModal.classList.remove('open');
-    });
-    document.getElementById('cancelSubmitCompliance').addEventListener('click', () => {
-      submitComplianceModal.classList.remove('open');
-    });
-
-    // Submit attendance
-    document.getElementById('submitAttendance').addEventListener('click', function() {
-      const employeeId = parseInt(document.getElementById('attendanceEmployee').value);
-      const date = document.getElementById('attendanceDate').value;
-      const status = document.getElementById('attendanceStatus').value;
-      const checkIn = document.getElementById('checkinTime').value;
-      const checkOut = document.getElementById('checkoutTime').value;
-      const remarks = document.getElementById('attendanceRemarks').value;
-      
-      // Calculate hours worked
-      let hours = 0;
-      if (checkIn && checkOut && status === 'present') {
-        const [inHours, inMinutes] = checkIn.split(':').map(Number);
-        const [outHours, outMinutes] = checkOut.split(':').map(Number);
-        hours = (outHours + outMinutes/60) - (inHours + inMinutes/60);
-      }
-      
-      // Find existing record or create new one
-      const existingIndex = attendanceData.findIndex(a => 
-        a.employeeId === employeeId && a.date === date
-      );
-      
-      if (existingIndex >= 0) {
-        // Update existing record
-        attendanceData[existingIndex] = {
-          employeeId, date, status, checkIn, checkOut, hours, remarks
-        };
-      } else {
-        // Add new record
-        attendanceData.push({
-          employeeId, date, status, checkIn, checkOut, hours, remarks
-        });
-      }
-      
-      // Save to localStorage
-      localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
-      
-      // Reload data
-      loadDailyAttendance();
-      loadWeeklyAttendance();
-      loadMonthlyCalendar();
-      
-      // Close modal
-      markAttendanceModal.classList.remove('open');
-      
-      // Show success message
-      alert('Attendance recorded successfully!');
-    });
-
-    // Toggle time inputs based on status
-    document.getElementById('attendanceStatus').addEventListener('change', function() {
-      const status = this.value;
-      const showTimes = status === 'present' || status === 'late';
-      
-      document.getElementById('checkinTimeGroup').style.display = showTimes ? 'block' : 'none';
-      document.getElementById('checkoutTimeGroup').style.display = showTimes ? 'block' : 'none';
-    });
-
-    // Submit leave request
-    document.getElementById('submitLeaveRequest').addEventListener('click', function() {
-      const leaveType = document.getElementById('leaveType').value;
-      const startDate = document.getElementById('leaveStartDate').value;
-      const endDate = document.getElementById('leaveEndDate').value;
-      const reason = document.getElementById('leaveReason').value;
-      
-      // Here you would typically send this data to your backend
-      console.log('Leave Request Submitted:', {
-        leaveType,
-        startDate,
-        endDate,
-        reason
-      });
-      
-      alert('Leave request submitted successfully!');
-      requestLeaveModal.classList.remove('open');
-    });
-
-    // Submit compliance
-    document.getElementById('submitCompliance').addEventListener('click', function() {
-      const complianceType = document.getElementById('complianceType').value;
-      const period = document.getElementById('compliancePeriod').value;
-      const notes = document.getElementById('complianceNotes').value;
-      
-      // Here you would typically send this data to your backend
-      console.log('Compliance Submitted:', {
-        complianceType,
-        period,
-        notes
-      });
-      
-      alert('Compliance submitted successfully!');
-      submitComplianceModal.classList.remove('open');
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-      if (e.target === markAttendanceModal) {
-        markAttendanceModal.classList.remove('open');
-      }
-      if (e.target === requestLeaveModal) {
-        requestLeaveModal.classList.remove('open');
-      }
-      if (e.target === submitComplianceModal) {
-        submitComplianceModal.classList.remove('open');
-      }
-    });
-
-    // Escape key to close modals
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        markAttendanceModal.classList.remove('open');
-        requestLeaveModal.classList.remove('open');
-        submitComplianceModal.classList.remove('open');
-      }
-    });
-
-    // Initialize the app when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initApp);
-  </script>
+  <script src="./js/dashboard_info.js"></script>
+  <script src="./js/attendance.js"></script>
 </body>
+
 </html>
-
-
