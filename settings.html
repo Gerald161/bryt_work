@@ -3,873 +3,205 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SICLife - Settings</title>
-  <style>
-    :root {
-      --primary: #1877f2; /* Facebook blue */
-      --primary-dark: #166fe5;
-      --secondary: #FFD700; /* Gold/yellow */
-      --secondary-light: #FFF4CC;
-      --accent: #f0f2f5;
-      --text-dark: #1c1e21;
-      --text-light: #65676b;
-      --white: #ffffff;
-      --border: #dddfe2;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-      --radius: 8px;
-      --transition: all 0.3s ease;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Helvetica, Arial, sans-serif;
-      scroll-behavior: smooth;
-    }
-    
-    body {
-      background-color: var(--accent);
-      color: var(--text-dark);
-    }
-    
-    /* Top Navigation Bar - Facebook Style */
-    .top-nav {
-      background-color: var(--white);
-      height: 56px;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-    }
-    
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-    
-    .logo img {
-      height: 40px;
-    }
-    
-    .search-bar {
-      flex-grow: 1;
-      max-width: 500px;
-      margin: 0 10px;
-      position: relative;
-    }
-    
-    .search-bar input {
-      width: 100%;
-      padding: 10px 15px 10px 35px;
-      border-radius: 50px;
-      border: none;
-      background-color: var(--accent);
-      font-size: 15px;
-    }
-    
-    .search-bar svg {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-light);
-    }
-    
-    .nav-icons {
-      display: flex;
-      gap: 8px;
-    }
-    
-    .nav-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    
-    .nav-icon:hover {
-      background-color: var(--accent);
-    }
-    
-    .nav-icon.active {
-      color: var(--primary);
-      position: relative;
-    }
-    
-    .nav-icon.active::after {
-      content: '';
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background-color: var(--primary);
-    }
-    
-    .user-menu {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: var(--secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: var(--text-dark);
-      cursor: pointer;
-    }
-    
-    /* Main Content */
-    .main-content {
-      display: flex;
-      margin-top: 56px;
-    }
-    
-    /* Left Sidebar - Shortcut Menu */
-    .left-sidebar {
-      width: 360px;
-      padding: 20px;
-      position: fixed;
-      top: 56px;
-      bottom: 0;
-      overflow-y: auto;
-    }
-    
-    .shortcut-menu {
-      margin-top: 20px;
-    }
-    
-    .menu-item {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: var(--transition);
-      margin-bottom: 4px;
-      text-decoration: none;
-      color: var(--text-dark);
-    }
-    
-    .menu-item:hover {
-      background-color: var(--accent);
-    }
-    
-    .menu-item.active {
-      background-color: var(--secondary-light);
-      font-weight: bold;
-    }
-    
-    .menu-item svg {
-      width: 24px;
-      height: 24px;
-      margin-right: 10px;
-      color: var(--primary);
-    }
-    
-    .menu-item.active svg {
-      color: var(--text-dark);
-    }
-    
-    .divider {
-      height: 1px;
-      background-color: var(--border);
-      margin: 16px 0;
-    }
-    
-    /* Settings Content */
-    .settings-content {
-      flex: 1;
-      margin-left: 360px;
-      padding: 20px;
-    }
-    
-    .settings-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    
-    .settings-title {
-      font-size: 24px;
-      font-weight: bold;
-    }
-    
-    .back-to-index {
-      display: flex;
-      align-items: center;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    
-    .back-to-index svg {
-      margin-right: 6px;
-    }
-    
-    /* Settings Cards */
-    .settings-card {
-      background-color: var(--white);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-    }
-    
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .card-title {
-      font-size: 18px;
-      font-weight: 600;
-    }
-    
-    .card-edit {
-      color: var(--primary);
-      cursor: pointer;
-      font-weight: 500;
-    }
-    
-    .form-group {
-      margin-bottom: 16px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--text-light);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 15px;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
-    }
-    
-    .btn {
-      padding: 10px 16px;
-      border-radius: var(--radius);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      border: none;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary);
-      color: var(--white);
-    }
-    
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
-    }
-    
-    .btn-secondary {
-      background-color: var(--secondary-light);
-      color: var(--text-dark);
-    }
-    
-    .btn-secondary:hover {
-      background-color: var(--secondary);
-    }
-
-    /* Profile Section Styles */
-    .profile-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
-      background: var(--white);
-      padding: 30px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    
-    .profile-avatar-large {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background-color: var(--primary);
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-right: 30px;
-      flex-shrink: 0;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .profile-avatar-large img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .profile-avatar-edit {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.5);
-      color: white;
-      text-align: center;
-      padding: 5px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: none;
-    }
-    
-    .profile-avatar-large:hover .profile-avatar-edit {
-      display: block;
-    }
-    
-    .profile-info h1 {
-      font-size: 1.8rem;
-      margin-bottom: 5px;
-      color: var(--text-dark);
-    }
-    
-    .profile-info p {
-      color: var(--text-light);
-      margin-bottom: 15px;
-    }
-    
-    .profile-stats {
-      display: flex;
-      gap: 20px;
-    }
-    
-    .stat-item {
-      text-align: center;
-    }
-    
-    .stat-value {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--primary);
-    }
-    
-    .stat-label {
-      font-size: 0.8rem;
-      color: var(--text-light);
-    }
-    
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    
-    .info-item {
-      margin-bottom: 15px;
-    }
-    
-    .info-label {
-      font-size: 0.8rem;
-      color: var(--text-light);
-      margin-bottom: 5px;
-    }
-    
-    .info-value {
-      font-size: 0.95rem;
-      color: var(--text-dark);
-    }
-    
-    .action-buttons {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    
-    /* Edit Form Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: var(--transition);
-    }
-    
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .modal {
-      background-color: var(--white);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 500px;
-      padding: 25px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-      transform: translateY(-20px);
-      transition: var(--transition);
-    }
-    
-    .modal-overlay.active .modal {
-      transform: translateY(0);
-    }
-    
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .modal-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
-    
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--text-light);
-    }
-    
-    /* Privacy Section */
-    .privacy-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .privacy-info {
-      flex: 1;
-    }
-    
-    .privacy-title {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    
-    .privacy-desc {
-      font-size: 13px;
-      color: var(--text-light);
-    }
-    
-    .privacy-select {
-      min-width: 150px;
-    }
-    
-    /* Notification Section */
-    .notification-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .notification-info {
-      flex: 1;
-    }
-    
-    .notification-title {
-      font-weight: 500;
-    }
-    
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-    
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-      background-color: var(--primary);
-    }
-    
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-    
-    /* Security Section */
-    .security-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .security-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--secondary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 12px;
-      color: var(--secondary);
-    }
-    
-    .security-info {
-      flex: 1;
-    }
-    
-    .security-title {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    
-    .security-desc {
-      font-size: 13px;
-      color: var(--text-light);
-    }
-    
-    .security-action {
-      color: var(--primary);
-      font-weight: 500;
-      cursor: pointer;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 1200px) {
-      .left-sidebar {
-        width: 280px;
-      }
-      .settings-content {
-        margin-left: 280px;
-      }
-    }
-    
-    @media (max-width: 992px) {
-      .left-sidebar {
-        display: none;
-      }
-      .settings-content {
-        margin-left: 0;
-      }
-      .profile-header {
-        flex-direction: column;
-        text-align: center;
-      }
-      .profile-avatar-large {
-        margin-right: 0;
-        margin-bottom: 20px;
-      }
-      .profile-stats {
-        justify-content: center;
-      }
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-      .action-buttons {
-        flex-direction: column;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .search-bar {
-        display: none;
-      }
-      .nav-icons {
-        display: none;
-      }
-    }
-  </style>
+  <title>SICLife Interns</title>
+  <link rel="stylesheet" href="./css/intern.css">
+  <link rel="stylesheet" href="./css/settings.css">
 </head>
 <body>
-  <!-- Top Navigation Bar -->
-  <nav class="top-nav">
-    <div class="logo">
-      <img src="images/sic logo.jpg" alt="SICLife Logo">
-    </div>
-    
-    <div class="search-bar">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-      </svg>
-      <input type="text" placeholder="Search settings...">
-    </div>
-    
-   
-    
-    <div class="user-menu">
-      <div class="user-avatar">BA</div>
-    </div>
-  </nav>
-  
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Left Sidebar -->
-    <aside class="left-sidebar">
-      <div class="shortcut-menu">
-        <a href="#profile" class="menu-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
-            <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
-          </svg>
-          <span>Profile Settings</span>
-        </a>
+  <div class="dashboard-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-logo-container">
+        <img src="images/sic logo.jpg" alt="SICLife Logo" class="brand-logo">
       </div>
+      <nav>
+        <a href="index.html">
+          <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M4 10v10h6v-6h4v6h6V10"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="intern.html">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="4"/><circle cx="17" cy="8" r="3"/><path d="M2 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"/><path d="M17 20v-1a3 3 0 00-2-2.83"/></svg>
+          <span>Interns</span>
+        </a>
+        <a href="attendance.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Attendance</span>
+        </a>
+        <a href="settings.html" class="active">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
     </aside>
-    
-    <!-- Settings Content -->
-    <main class="settings-content">
-      <div class="settings-header">
-        <h1 class="settings-title">Profile Settings</h1>
-        <a href="index.html" class="back-to-dashboard">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-          </svg>
-          Back to Dashboard
-        </a>
-      </div>
-      
-      <!-- Profile Header -->
-      <div class="profile-header">
-        <div class="profile-avatar-large">
-          <img src="images/admin.jpg" alt="Profile" id="profileImg">
-          <div class="profile-avatar-edit" id="editProfilePic">Change Photo</div>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Top Navigation -->
+      <nav class="top-nav">
+        <div class="search-bar">
+          <input type="text" placeholder="Search interns...">
         </div>
-        <div class="profile-info">
-          <h1>Bright Amankwah-Opoku</h1>
-          <p>Admin | SICLife Intern Tracker</p>
-          <div class="profile-stats">
-            <div class="stat-item">
-              <div class="stat-value">15</div>
-              <div class="stat-label">Interns</div>
+        <div class="user-menu">
+          <div class="profile-dropdown" id="profileDropdown">
+            <button class="profile-btn" id="profileBtn">
+              <span class="profile-avatar" id="profile_avatar">BA</span>
+              <span class="profile-name" id="user_name">Bright Amankwah-Opoku</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Profile
+              </a>
+              <a href="settings.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Settings
+              </a>
+              <span id="logout_button" href="index.html">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Logout
+              </span>
             </div>
-            <div class="stat-item">
-              <div class="stat-value">5</div>
-              <div class="stat-label">Active</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">3</div>
-              <div class="stat-label">Years</div>
-            </div>
           </div>
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="header">
+            <h1>Profile Settings</h1>
+            <a href="dashboard.html" class="back-link">
+                <span>←</span> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-image-container" onclick="changeProfileImage()">
+                    <img src="./images/admin.jpg" alt="Profile Picture" class="profile-image" id="profileImage">
+                    <div class="profile-image-overlay">
+                        Change Photo
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h2 id="displayName">Bright Amankwah-Opoku</h2>
+                    <p class="profile-role">Admin | SICLife Intern Tracker</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Interns</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Years</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="section-header">
+                <h3 class="section-title">Personal Information</h3>
+                <span class="edit-btn" onclick="toggleEdit()" id="editToggle">Edit</span>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-field">
+                    <label class="field-label">Full Name</label>
+                    <input type="text" class="field-value" id="fullName" value="Bright Amankwah-Opoku" readonly>
+                </div>
+                <div class="info-field">
+                    <label class="field-label">Email</label>
+                    <input type="email" class="field-value" id="email" value="sirbright.amankwah@gmail.com" readonly>
+                </div>
+                <div class="info-field">
+                    <label class="field-label">Phone</label>
+                    <input type="tel" class="field-value" id="phone" value="+233 20 177 4300" readonly>
+                </div>
+                <div class="info-field">
+                    <label class="field-label">Department</label>
+                    <input type="text" class="field-value" id="department" value="Human Resources" readonly>
+                </div>
+                <div class="info-field">
+                    <label class="field-label">Position</label>
+                    <input type="text" class="field-value" id="position" value="Internship Coordinator" readonly>
+                </div>
+                <div class="info-field">
+                    <label class="field-label">Employee ID</label>
+                    <input type="text" class="field-value" id="employeeId" value="SIC-EMP-2020-045" readonly>
+                </div>
+            </div>
+
+            <div class="editing-buttons" id="editingButtons">
+                <button class="btn btn-save" onclick="saveChanges()">
+                    <span>💾</span> Save Changes
+                </button>
+                <button class="btn btn-cancel" onclick="cancelEdit()">
+                    <span>❌</span> Cancel
+                </button>
+            </div>
+
+            <div class="action-buttons" id="actionButtons">
+                <button class="btn btn-primary" onclick="toggleEdit()">
+                    <span>✏️</span> Edit Profile
+                </button>
+                <button class="btn btn-secondary" onclick="openPasswordModal()">
+                    <span>🔒</span> Change Password
+                </button>
+            </div>
         </div>
       </div>
-      
-      <!-- Personal Information Section -->
-      <div id="profile" class="settings-card">
-        <div class="card-header">
-          <h2 class="card-title">Personal Information</h2>
-          <span class="card-edit" id="editProfileBtn">Edit</span>
+
+      <!-- Password Change Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Password</h3>
+                <button class="close-btn" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <form class="modal-form" onsubmit="changePassword(event)">
+                <div class="modal-field">
+                    <label>Current Password</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="modal-field">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" required minlength="6">
+                </div>
+                <div class="modal-field">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closePasswordModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
         </div>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Full Name</div>
-            <div class="info-value">Bright Amankwah-Opoku</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Email</div>
-            <div class="info-value">sirbright.amankwah@gmail.com</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Phone</div>
-            <div class="info-value">+233 20 177 4300</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Department</div>
-            <div class="info-value">Human Resources</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Position</div>
-            <div class="info-value">Internship Coordinator</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Employee ID</div>
-            <div class="info-value">SIC-EMP-2020-045</div>
-          </div>
-        </div>
-        <div class="action-buttons">
-          <button class="btn btn-primary" id="editProfileBtn2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 19l7-7 3 3-7 7-3-3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2 2l7.586 7.586" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Edit Profile
-          </button>
-          <button class="btn btn-outline" id="changePasswordBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Change Password
-          </button>
-        </div>
-      </div>
+    </div>
+
+    <!-- Hidden file input for image upload -->
+    <input type="file" id="imageUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
     </main>
   </div>
 
-  <!-- Edit Profile Modal -->
-  <div class="modal-overlay" id="editProfileModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title">Edit Profile Information</h2>
-        <button class="modal-close" id="closeModalBtn">&times;</button>
-      </div>
-      
-      <div class="form-group">
-        <label for="editName">Full Name</label>
-        <input type="text" id="editName" class="form-control" value="Bright Amankwah-Opoku">
-      </div>
-      
-      <div class="form-group">
-        <label for="editEmail">Email</label>
-        <input type="email" id="editEmail" class="form-control" value="bright.amankwah@siclife.com">
-      </div>
-      
-      <div class="form-group">
-        <label for="editPhone">Phone</label>
-        <input type="tel" id="editPhone" class="form-control" value="+233 24 123 4567">
-      </div>
-      
-      <div class="form-group">
-        <label for="editPosition">Position</label>
-        <input type="text" id="editPosition" class="form-control" value="Internship Coordinator">
-      </div>
-      
-      <div class="form-group">
-        <label for="editDepartment">Department</label>
-        <input type="text" id="editDepartment" class="form-control" value="Human Resources">
-      </div>
-      
-      <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
-        <button class="btn btn-primary" id="confirmEditBtn">Save Changes</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Change Password Modal -->
-  <div class="modal-overlay" id="changePasswordModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title">Change Password</h2>
-        <button class="modal-close" id="closePasswordModal">&times;</button>
-      </div>
-      
-      <div class="form-group">
-        <label for="currentPassword">Current Password</label>
-        <input type="password" id="currentPassword" class="form-control">
-      </div>
-      
-      <div class="form-group">
-        <label for="newPassword">New Password</label>
-        <input type="password" id="newPassword" class="form-control">
-      </div>
-      
-      <div class="form-group">
-        <label for="confirmPassword">Confirm New Password</label>
-        <input type="password" id="confirmPassword" class="form-control">
-      </div>
-      
-      <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" id="cancelPasswordBtn">Cancel</button>
-        <button class="btn btn-primary" id="savePasswordBtn">Update Password</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Profile Picture Upload Modal -->
-  <div class="modal-overlay" id="profilePicModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title">Change Profile Picture</h2>
-        <button class="modal-close" id="closePicModal">&times;</button>
-      </div>
-      
-      <div class="file-upload">
-        <div class="file-upload-preview">
-          <img src="images/profile-placeholder.jpg" alt="Profile Preview" id="picPreview">
-        </div>
-        <div class="file-upload-btn btn btn-outline">
-          <span>Choose New Picture</span>
-          <input type="file" id="picUpload" accept="image/*">
-        </div>
-      </div>
-      
-      <div class="form-group" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" id="cancelPicBtn">Cancel</button>
-        <button class="btn btn-primary" id="savePicBtn">Save Picture</button>
-      </div>
-    </div>
-  </div>
+  <script src="./js/dashboard_info.js"></script>
+  <script src="./js/settings.js"></script>
 </body>
+
 </html>

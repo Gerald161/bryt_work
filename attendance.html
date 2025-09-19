@@ -267,12 +267,12 @@
       <div class="sidebar-card">
         <h3 class="sidebar-title">Quick Actions</h3>
         <button class="btn btn-primary" style="width: 100%; margin-bottom: 8px;" id="markAttendanceBtn">Mark Attendance</button>
-        <button class="btn btn-outline" style="width: 100%; margin-bottom: 8px;" id="requestLeaveBtn">Request Leave</button>
-        <button class="btn btn-outline" style="width: 100%;" id="submitComplianceBtn">Submit Compliance</button>
+        <button class="btn btn-outline" style="display:none; width: 100%; margin-bottom: 8px;" id="requestLeaveBtn">Request Leave</button>
+        <button class="btn btn-outline" style="display:none; width: 100%;" id="submitComplianceBtn">Submit Compliance</button>
       </div>
       
       <!-- Reports Card -->
-      <div class="sidebar-card">
+      <div class="sidebar-card" style="display: none;">
         <h3 class="sidebar-title">Reports</h3>
         <button class="btn btn-primary" style="width: 100%; margin-bottom: 8px;" id="printWeeklyBtn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -297,8 +297,8 @@
           <h2 class="section-title">Attendance Records</h2>
           <div class="view-options">
             <button class="view-btn active" data-view="daily">Daily</button>
-            <button class="view-btn" data-view="weekly">Weekly</button>
-            <button class="view-btn" data-view="monthly">Monthly</button>
+            <!-- <button class="view-btn" data-view="weekly">Weekly</button>
+            <button class="view-btn" data-view="monthly">Monthly</button> -->
             <button class="print-btn" id="printCurrentView">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect>
@@ -388,8 +388,8 @@
   <div class="mobile-actions">
     <div class="mobile-actions-inner">
       <button class="mobile-actions-btn primary" id="mobileMarkAttendanceBtn">Mark Attendance</button>
-      <button class="mobile-actions-btn" id="mobileRequestLeaveBtn">Request Leave</button>
-      <button class="mobile-actions-btn" id="mobileSubmitComplianceBtn">Submit Compliance</button>
+      <!-- <button class="mobile-actions-btn" id="mobileRequestLeaveBtn">Request Leave</button>
+      <button class="mobile-actions-btn" id="mobileSubmitComplianceBtn">Submit Compliance</button> -->
     </div>
   </div>
 
@@ -550,14 +550,22 @@
   </div>
 
   <script>
-    // Sample employee data
-    const employees = [
-      { id: 1, name: "Melissa Eshun" },
-      { id: 2, name: "Rahim Alhassan" },
-      { id: 3, name: "Joyce Osei" },
-      { id: 4, name: "Bismark Issah" },
-      { id: 5, name: "Kwame Mensah" }
-    ];
+    let submissions = JSON.parse(localStorage.getItem("submissions")) || [];
+
+    // const employees = [
+    //   { id: 1, name: "Melissa Eshun" },
+    //   { id: 2, name: "Rahim Alhassan" },
+    //   { id: 3, name: "Joyce Osei" },
+    //   { id: 4, name: "Bismark Issah" },
+    //   { id: 5, name: "Kwame Mensah" }
+    // ];
+
+    const employees = submissions.map((sub, index) => ({
+      id: index + 1,
+      name: sub.name
+    }));
+
+    console.log(submissions)
 
     // Attendance data storage
     let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
