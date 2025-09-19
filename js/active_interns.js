@@ -2,6 +2,10 @@ const internList = document.querySelector(".intern-list");
 
 let storedData = JSON.parse(localStorage.getItem("submissions"));
 
+const interns_count = document.querySelector("#interns-count");
+
+const active_interns_count = document.querySelector("#active_interns_count");
+
 let activeInterns = [
     {
         name: "Emmanuel Osei",
@@ -24,7 +28,7 @@ if (storedData && Array.isArray(storedData)) {
 activeInterns.forEach((intern)=>{
     internList.innerHTML += `
     <li class="intern-item">
-    <div class="intern-avatar">AS</div>
+    <img src="${intern.photo}" class="intern-avatar" alt="">
     <div class="intern-info">
         <div class="intern-name">${intern.name}</div>
         <div class="intern-position">Marketing Intern</div>
@@ -33,3 +37,7 @@ activeInterns.forEach((intern)=>{
     </li>
 `
 })
+
+interns_count.innerHTML = activeInterns.length;
+
+active_interns_count.innerHTML = activeInterns.filter(intern => intern.status === "active").length;
