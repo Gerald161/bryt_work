@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SICLife Interns Tracker</title>
+  <!-- Add jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root {
+      --primary: #0077b5;
+      --primary-dark: #005582;
+      --secondary: #f5f5f5;
+      --accent: #e9e9e9;
+      --text-dark: #333333;
+      --text-light: #666666;
+      --text-lighter: #999999;
+      --white: #ffffff;
+      --border: #dddddd;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --radius: 8px;
+      --transition: all 0.3s ease;
+    }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--secondary);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+    .dashboard-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+      transition: width 0.3s;
+      overflow-y: auto;
+    }
+    .brand-logo-container {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .brand-logo {
+      max-height: 50px;
+      width: auto;
+    }
+    .sidebar nav {
+      padding: 20px 0;
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .sidebar nav a:hover, 
+    .sidebar nav a.active {
+      color: var(--primary);
+      background-color: rgba(0, 119, 181, 0.1);
+      border-left: 3px solid var(--primary);
+    }
+    .sidebar nav svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      stroke: currentColor;
+    }
+    .sidebar nav span {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: 240px;
+      background-color: var(--secondary);
+    }
+
+    /* Top Navigation Bar */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: var(--white);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .search-bar {
+      flex-grow: 1;
+      max-width: 500px;
+      margin: 0 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .profile-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .profile-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .dropdown-menu {
+      position: absolute;
+      right: 30px;
+      top: 60px;
+      background: var(--white);
+      width: 200px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px 0;
+      display: none;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .dropdown-menu a:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    .dropdown-menu span{
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .dropdown-menu span:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    .dropdown-menu svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      stroke: currentColor;
+    }
+    .profile-dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    /* Content Area */
+    .content {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      grid-column: 1 / -1;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero-carousel {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+    }
+    .carousel-img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .carousel-img.active {
+      opacity: 1;
+    }
+    .carousel-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .carousel-dot.active {
+      background: var(--white);
+      transform: scale(1.2);
+    }
+    .hero-content {
+      padding: 25px;
+    }
+    .hero-title {
+      font-size: 1.8rem;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+    .hero-desc {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    /* About Company Section */
+    .about-company {
+      grid-column: 1 / -1;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .about-content {
+      padding: 25px;
+    }
+    .about-content h3 {
+      color: var(--primary);
+      margin: 15px 0 10px;
+      font-size: 1.1rem;
+    }
+    .about-content p, .about-content ul {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .about-content ul {
+      padding-left: 20px;
+    }
+    .about-content li {
+      margin-bottom: 8px;
+    }
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .download-btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* Updated Photo Gallery Styles */
+    .photo-gallery {
+      grid-column: 1 / -1;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .gallery-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px;
+      background-color: var(--accent);
+      color: var(--text-dark);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .gallery-btn:hover {
+      background-color: var(--border);
+    }
+    .gallery-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      position: relative;
+      width: 90%;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .gallery-container {
+      position: relative;
+      text-align: center;
+    }
+    .gallery-item {
+      display: none;
+    }
+    .gallery-item.active {
+      display: block;
+    }
+    .gallery-item img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .gallery-caption {
+      color: white;
+      margin-top: 15px;
+      font-size: 1.1rem;
+    }
+    .gallery-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+    .gallery-prev, .gallery-next {
+      pointer-events: auto;
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 20px;
+      transition: all 0.3s;
+    }
+    .gallery-prev:hover, .gallery-next:hover {
+      background-color: rgba(0,0,0,0.8);
+      transform: scale(1.1);
+    }
+    .gallery-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+    .gallery-close:hover {
+      background-color: rgba(0,0,0,0.8);
+      transform: scale(1.1);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 119, 181, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+    .stat-note {
+      font-size: 0.8rem;
+      color: var(--text-lighter);
+    }
+
+    /* Right Sidebar */
+    .right-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .widget {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .widget-title {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .intern-list {
+      list-style: none;
+    }
+    .intern-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .intern-item:last-child {
+      border-bottom: none;
+    }
+    .intern-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--secondary);
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: bold;
+    }
+    .intern-info {
+      flex: 1;
+    }
+    .intern-name {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 3px;
+    }
+    .intern-position {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .intern-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4CAF50;
+    }
+    .intern-status.away {
+      background: #FFC107;
+    }
+    .intern-status.offline {
+      background: #F44336;
+    }
+
+    /* Recent Activity */
+    .activity-item {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 119, 181, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: var(--primary);
+    }
+    .activity-content {
+      flex: 1;
+    }
+    .activity-text {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+    .activity-time {
+      font-size: 0.8rem;
+      color: var(--text-lighter);
+      margin-top: 3px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+      .right-sidebar {
+        grid-row: 3;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      .sidebar nav span {
+        display: none;
+      }
+      .sidebar nav a {
+        justify-content: center;
+        padding: 15px 0;
+      }
+      .sidebar nav svg {
+        margin-right: 0;
+      }
+      .main {
+        margin-left: 70px;
+      }
+      .top-nav {
+        padding: 15px;
+      }
+      .search-bar {
+        margin: 0 10px;
+      }
+      .profile-name {
+        display: none;
+      }
+      .gallery-prev, .gallery-next {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        margin: 0 10px;
+      }
+      .gallery-close {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+      }
+    }
+    @media (max-width: 576px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .content {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-logo-container">
+        <img src="images/sic logo.jpg" alt="SICLife Logo" class="brand-logo">
+      </div>
+      
+      <nav>
+        <a href="#">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 11.5 12 4l9 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 10v10h6v-6h4v6h6V10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="intern.html">
+          <svg viewBox="0 0 24 24">
+            <circle cx="8" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="17" cy="8" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 20v-1a4 4 0 014-4h4a4 4 0 014 4v1" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17 20v-1a3 3 0 00-2-2.83" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Interns</span>
+        </a>
+        <a href="attendance.html">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Attendance</span>
+        </a>
+        <a href="report.html">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="12" width="4" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="9" y="8" width="4" height="12" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="15" y="4" width="4" height="16" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Reports</span>
+        </a>
+        <a href="settings.html">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4a1.65 1.65 0 00-1.32.76h0a1.65 1.65 0 00-.38 1.39V22a2 2 0 01-4 0v-.07a1.65 1.65 0 00-.38-1.39h0A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82-.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-.76-1.32h0A1.65 1.65 0 002.45 12V12a2 2 0 010-4v-.07a1.65 1.65 0 00.76-1.32h0A1.65 1.65 0 004.6 8.6l.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001.32-.76h0A1.65 1.65 0 0012 2.45V2a2 2 0 014 0v.07a1.65 1.65 0 001.32.76h0A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 00.76 1.32h0A1.65 1.65 0 0021.55 12V12a2 2 0 010 4z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Top Navigation Bar -->
+      <nav class="top-nav">
+        <div class="search-bar">
+          <input type="text" placeholder="Search interns, reports...">
+        </div>
+        <div class="user-menu">
+          <div class="profile-dropdown" id="profileDropdown">
+            <button class="profile-btn" id="profileBtn">
+              <span class="profile-avatar" id="profile_avatar">BA</span>
+              <span class="profile-name" id="user_name">Bright Amankwah-Opoku</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Profile
+              </a>
+              <a href="settings.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Settings
+              </a>
+              <span id="logout_button" href="index.html">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Logout
+              </span>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-carousel">
+            <img src="images/sic3.jpg" class="carousel-img active" alt="Team working together">
+            <img src="images/com1.jpg" class="carousel-img" alt="Interns learning">
+            <img src="images/COMA.jpg" class="carousel-img" alt="Team meeting">
+            <img src="images/com4.jpg" class="carousel-img" alt="Success celebration">
+            <div class="carousel-controls">
+              <span class="carousel-dot active" data-slide="0"></span>
+              <span class="carousel-dot" data-slide="1"></span>
+              <span class="carousel-dot" data-slide="2"></span>
+              <span class="carousel-dot" data-slide="3"></span>
+            </div>
+          </div>
+          <div class="hero-content">
+            <h1 class="hero-title">SICLife Intern Management</h1>
+            <p class="hero-desc">Track, manage, and develop intern</p>
+          </div>
+        </section>
+        
+        <!-- About Company Section -->
+        <section class="widget about-company">
+          <h2 class="widget-title">About SICLife</h2>
+          <div class="about-content">
+            <div class="mission-section">
+              <h3>Our Mission</h3>
+              <p>To provide innovative insurance solutions that secure the future of our customers through excellent service and financial strength.</p>
+            </div>
+            <div class="vision-section">
+              <h3>Our Vision</h3>
+              <p>To be the leading life insurance company in Ghana and beyond, recognized for our customer-centric approach and sustainable growth.</p>
+            </div>
+            <div class="objectives-section">
+              <h3>Our Objectives</h3>
+              <ul>
+                <li>Provide financial security to individuals and businesses</li>
+                <li>Deliver exceptional customer service</li>
+                <li>Maintain strong corporate governance</li>
+                <li>Invest in our employees' development</li>
+                <li>Contribute positively to our communities</li>
+              </ul>
+            </div>
+            <button class="download-btn" id="downloadAboutBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Download About Us (PDF)
+            </button>
+          </div>
+        </section>
+        
+        <!-- Photo Gallery Section -->
+        <section class="widget photo-gallery">
+          <h2 class="widget-title">Company Gallery</h2>
+          <button class="gallery-btn" id="galleryBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            View Photo Gallery
+          </button>
+          <div class="gallery-modal" id="galleryModal">
+            <div class="modal-content">
+              <button class="gallery-close" id="galleryClose">&times;</button>
+              <div class="gallery-container">
+                <div class="gallery-item active">
+                  <img src="images/sic3.jpg" alt="Company Event">
+                  <div class="gallery-caption">Annual General Meeting 2023</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="images/hall.jpg" alt="Team Building">
+                  <div class="gallery-caption">SICLife Sika Plan Office</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="images/COMA.jpg" alt="Award Ceremony">
+                  <div class="gallery-caption">Employee Recognition Awards</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="images/com4.jpg" alt="Community Service">
+                  <div class="gallery-caption">Community Outreach Program</div>
+                </div>
+                <div class="gallery-nav">
+                  <button class="gallery-prev">❮</button>
+                  <button class="gallery-next">❯</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Stats Grid -->
+        <section class="widget">
+          <h2 class="widget-title">Key Metrics</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">👥</div>
+              <div class="stat-label">Total Number of Interns </div>
+              <div class="stat-value" id="interns-count">15</div>
+              <div class="stat-note">For The Past 3yrs</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">✅</div>
+              <div class="stat-label">Active Interns</div>
+              <div class="stat-value" id="interns-count">5</div>
+              <div class="stat-note">current Intern</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📈</div>
+              <div class="stat-label">Reports</div>
+              <div class="stat-value" id="reports-count">15</div>
+              <div class="stat-note">This month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⭐</div>
+              <div class="stat-label">Evaluations</div>
+              <div class="stat-value" id="reviews-count">8</div>
+              <div class="stat-note">Pending reviews</div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+          <!-- Active Interns Widget -->
+          <div class="widget">
+            <h2 class="widget-title">Active Interns</h2>
+            <ul class="intern-list">
+              <!-- Intern items will be added dynamically -->
+            </ul>
+          </div>
+          
+          <!-- Recent Activity Widget -->
+          <div class="widget">
+            <h2 class="widget-title">Recent Activity</h2>
+            <div class="activity-item">
+              <div class="activity-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="activity-content">
+                <div class="activity-text">Stephen Sasu completed training module</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="activity-content">
+                <div class="activity-text">New intern David joined</div>
+                <div class="activity-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M2 2l7.586 7.586" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="activity-content">
+                <div class="activity-text">Performance review scheduled</div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
+
+    // Carousel functionality
+    const carouselImgs = document.querySelectorAll('.carousel-img');
+    const carouselDots = document.querySelectorAll('.carousel-dot');
+    let currentIndex = 0;
+    let interval;
+
+    function showSlide(index) {
+        carouselImgs.forEach(img => img.classList.remove('active'));
+        carouselDots.forEach(dot => dot.classList.remove('active'));
+        
+        carouselImgs[index].classList.add('active');
+        carouselDots[index].classList.add('active');
+        currentIndex = index;
+    }
+
+    function nextSlide() {
+        const nextIndex = (currentIndex + 1) % carouselImgs.length;
+        showSlide(nextIndex);
+    }
+
+    function startCarousel() {
+        interval = setInterval(nextSlide, 5000);
+    }
+
+    carouselDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+        clearInterval(interval);
+        showSlide(index);
+        startCarousel();
+        });
+    });
+
+    startCarousel();
+
+    // Profile dropdown functionality
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+        profileDropdown.classList.remove('open');
+    });
+
+    // Download About Us as PDF functionality
+    document.getElementById('downloadAboutBtn').addEventListener('click', function() {
+        // Create a new PDF document
+        const doc = new jsPDF();
+        
+        // Add logo (if available)
+        // doc.addImage('images/sic logo.jpg', 'JPEG', 10, 10, 30, 30);
+        
+        // Set document properties
+        doc.setProperties({
+        title: 'SICLife - About Us',
+        subject: 'Company Information',
+        author: 'SICLife',
+        keywords: 'siclife, about, mission, vision',
+        creator: 'SICLife Intern Tracker'
+        });
+        
+        // Add title
+        doc.setFontSize(20);
+        doc.setTextColor(0, 119, 181); // SICLife blue
+        doc.text('SICLife - About Us', 105, 20, { align: 'center' });
+        
+        // Reset font for content
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0); // Black
+        
+        // Add mission section
+        doc.setFont(undefined, 'bold');
+        doc.text('Our Mission:', 15, 40);
+        doc.setFont(undefined, 'normal');
+        doc.text('To provide innovative insurance solutions that secure the future of our', 15, 50);
+        doc.text('customers through excellent service and financial strength.', 15, 55);
+        
+        // Add vision section
+        doc.setFont(undefined, 'bold');
+        doc.text('Our Vision:', 15, 70);
+        doc.setFont(undefined, 'normal');
+        doc.text('To be the leading life insurance company in Ghana and beyond,', 15, 80);
+        doc.text('recognized for our customer-centric approach and sustainable growth.', 15, 85);
+        
+        // Add objectives section
+        doc.setFont(undefined, 'bold');
+        doc.text('Our Objectives:', 15, 100);
+        doc.setFont(undefined, 'normal');
+        
+        const objectives = [
+        '• Provide financial security to individuals and businesses',
+        '• Deliver exceptional customer service',
+        '• Maintain strong corporate governance',
+        '• Invest in our employees\' development',
+        '• Contribute positively to our communities'
+        ];
+        
+        objectives.forEach((obj, i) => {
+        doc.text(obj, 20, 110 + (i * 7));
+        });
+        
+        // Add footer
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Generated by SICLife Intern Tracker', 105, 290, { align: 'center' });
+        
+        // Save the PDF
+        doc.save('SICLife_About_Us.pdf');
+    });
+
+    // Photo Gallery functionality
+    const galleryBtn = document.getElementById('galleryBtn');
+    const galleryModal = document.getElementById('galleryModal');
+    const closeBtn = document.getElementById('galleryClose');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const prevBtn = document.querySelector('.gallery-prev');
+    const nextBtn = document.querySelector('.gallery-next');
+    let currentGalleryIndex = 0;
+
+    function showGalleryItem(index) {
+        galleryItems.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
+    }
+
+    galleryBtn.addEventListener('click', () => {
+        galleryModal.style.display = 'flex';
+        showGalleryItem(currentGalleryIndex);
+        document.body.style.overflow = 'hidden';
+    });
+
+    function closeGallery() {
+        galleryModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    closeBtn.addEventListener('click', closeGallery);
+
+    window.addEventListener('click', (event) => {
+        if (event.target === galleryModal) {
+            closeGallery();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        currentGalleryIndex = (currentGalleryIndex - 1 + galleryItems.length) % galleryItems.length;
+        showGalleryItem(currentGalleryIndex);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentGalleryIndex = (currentGalleryIndex + 1) % galleryItems.length;
+        showGalleryItem(currentGalleryIndex);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (galleryModal.style.display === 'flex') {
+            if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+            } else if (e.key === 'ArrowRight') {
+                nextBtn.click();
+            } else if (e.key === 'Escape') {
+                closeGallery();
+            }
+        }
+    });
+
+    // Active Interns functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const internList = document.querySelector('.intern-list');
+        
+        // Sample data - replace with your actual data
+        const interns = [
+            { name: "Emmanuel Osei", position: "Marketing Intern", status: "active" },
+            { name: "Ackah Samuel", position: "IT Intern", status: "away" },
+            { name: "David David", position: "Finance Intern", status: "offline" },
+            { name: "Stephen Sasu", position: "HR Intern", status: "active" }
+        ];
+        
+        interns.forEach(intern => {
+            const initials = intern.name.split(' ').map(n => n[0]).join('');
+            const statusClass = intern.status === "active" ? "" : 
+                               intern.status === "away" ? "away" : "offline";
+            
+            const internItem = document.createElement('li');
+            internItem.className = 'intern-item';
+            internItem.innerHTML = `
+                <div class="intern-avatar">${initials}</div>
+                <div class="intern-info">
+                    <div class="intern-name">${intern.name}</div>
+                    <div class="intern-position">${intern.position}</div>
+                </div>
+                <div class="intern-status ${statusClass}"></div>
+            `;
+            
+            internList.appendChild(internItem);
+        });
+    });
+  </script>
+
+  <script src="./js/dashboard_info.js"></script>
+</body>
+</html>

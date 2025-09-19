@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile | SICLife Interns Tracker</title>
+  <style>
+    :root {
+      --primary: #0077b5; /* LinkedIn blue */
+      --primary-dark: #005582;
+      --secondary: #f5f5f5; /* Light gray */
+      --accent: #e9e9e9;
+      --text-dark: #333333;
+      --text-light: #666666;
+      --text-lighter: #999999;
+      --white: #ffffff;
+      --border: #dddddd;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --radius: 8px;
+      --transition: all 0.3s ease;
+    }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--secondary);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+    .dashboard-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar - Modern LinkedIn Style */
+    .sidebar {
+      width: 240px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+      transition: width 0.3s;
+      overflow-y: auto;
+    }
+    .brand-logo-container {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .brand-logo {
+      max-height: 50px;
+      width: auto;
+    }
+    .sidebar nav {
+      padding: 20px 0;
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .sidebar nav a:hover, 
+    .sidebar nav a.active {
+      color: var(--primary);
+      background-color: rgba(0, 119, 181, 0.1);
+      border-left: 3px solid var(--primary);
+    }
+    .sidebar nav svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      stroke: currentColor;
+    }
+    .sidebar nav span {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: 240px;
+      background-color: var(--secondary);
+    }
+
+    /* Top Navigation Bar */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: var(--white);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .search-bar {
+      flex-grow: 1;
+      max-width: 500px;
+      margin: 0 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .profile-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+      overflow: hidden;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .dropdown-menu {
+      position: absolute;
+      right: 30px;
+      top: 60px;
+      background: var(--white);
+      width: 200px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px 0;
+      display: none;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .dropdown-menu a:hover {
+      background-color: var(--secondary);
+      color: var(--primary);
+    }
+    .dropdown-menu svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      stroke: currentColor;
+    }
+    .profile-dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    /* Profile Content */
+    .profile-content {
+      padding: 30px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      background: var(--white);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .profile-avatar-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-right: 30px;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .profile-avatar-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-avatar-edit {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      text-align: center;
+      padding: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: none;
+    }
+    .profile-avatar-large:hover .profile-avatar-edit {
+      display: block;
+    }
+    .profile-info h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      color: var(--text-dark);
+    }
+    .profile-info p {
+      color: var(--text-light);
+      margin-bottom: 15px;
+    }
+    .profile-stats {
+      display: flex;
+      gap: 20px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* Profile Sections */
+    .profile-section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .info-item {
+      margin-bottom: 15px;
+    }
+    .info-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+    .info-value {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dark);
+    }
+    .btn-outline:hover {
+      background-color: var(--accent);
+    }
+    .btn-danger {
+      background-color: #f44336;
+      color: white;
+      border: none;
+    }
+    .btn-danger:hover {
+      background-color: #d32f2f;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: var(--white);
+      padding: 30px;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin: 0;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 119, 181, 0.1);
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+    .file-upload {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .file-upload-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: var(--secondary);
+      overflow: hidden;
+      position: relative;
+    }
+    .file-upload-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .file-upload-btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .file-upload-btn input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      .sidebar nav span {
+        display: none;
+      }
+      .sidebar nav a {
+        justify-content: center;
+        padding: 15px 0;
+      }
+      .sidebar nav svg {
+        margin-right: 0;
+      }
+      .main {
+        margin-left: 70px;
+      }
+      .top-nav {
+        padding: 15px;
+      }
+      .search-bar {
+        margin: 0 10px;
+      }
+      .profile-name {
+        display: none;
+      }
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .profile-avatar-large {
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+      .profile-stats {
+        justify-content: center;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 576px) {
+      .profile-content {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-logo-container">
+        <img src="images/sic logo.jpg" alt="SICLife Logo" class="brand-logo">
+      </div>
+      
+      <nav>
+        <a href="intern.html">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 11.5 12 4l9 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 10v10h6v-6h4v6h6V10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="intern.html">
+          <svg viewBox="0 0 24 24">
+            <circle cx="8" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="17" cy="8" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 20v-1a4 4 0 014-4h4a4 4 0 014 4v1" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17 20v-1a3 3 0 00-2-2.83" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Interns</span>
+        </a>
+        <a href="attendance.html">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Attendance</span>
+        </a>
+        <a href="report.html">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="12" width="4" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="9" y="8" width="4" height="12" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="15" y="4" width="4" height="16" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Reports</span>
+        </a>
+        <a href="settings.html">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4a1.65 1.65 0 00-1.32.76h0a1.65 1.65 0 00-.38 1.39V22a2 2 0 01-4 0v-.07a1.65 1.65 0 00-.38-1.39h0A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82-.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-.76-1.32h0A1.65 1.65 0 002.45 12V12a2 2 0 010-4v-.07a1.65 1.65 0 00.76-1.32h0A1.65 1.65 0 004.6 8.6l.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001.32-.76h0A1.65 1.65 0 0012 2.45V2a2 2 0 014 0v.07a1.65 1.65 0 001.32.76h0A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 00.76 1.32h0A1.65 1.65 0 0021.55 12V12a2 2 0 010 4z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Top Navigation Bar -->
+      <nav class="top-nav">
+        <div class="search-bar">
+          <input type="text" placeholder="Search...">
+        </div>
+        <div class="user-menu">
+          <div class="profile-dropdown" id="profileDropdown">
+            <button class="profile-btn" id="profileBtn">
+              <div class="profile-avatar">
+                <img src="images/admin.jpg" alt="Profile" id="headerProfileImg">
+              </div>
+              <span class="profile-name">Bright Amankwah-Opoku</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Profile
+              </a>
+              <a href="settings.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Settings
+              </a>
+              <a href="login.html">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Logout
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Profile Content -->
+      <div class="profile-content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-avatar-large">
+            <img src="images/admin.jpg" alt="Profile" id="profileImg">
+            <div class="profile-avatar-edit" id="editProfilePic">Change Photo</div>
+          </div>
+          <div class="profile-info">
+            <h1>Bright Amankwah-Opoku</h1>
+            <p>Admin | SICLife Intern Tracker</p>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-value">15</div>
+                <div class="stat-label">Interns</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Active</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Years</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Personal Information Section -->
+        <div class="profile-section">
+          <h2 class="section-title">Personal Information</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Full Name</div>
+              <div class="info-value">Bright Amankwah-Opoku</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value">sirbright.amankwah@gmail.com</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Phone</div>
+              <div class="info-value">+233 20 177 4300</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Department</div>
+              <div class="info-value">Human Resources</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Position</div>
+              <div class="info-value">Internship Coordinator</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Employee ID</div>
+              <div class="info-value">SIC-EMP-2020-045</div>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" id="editProfileBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 19l7-7 3 3-7 7-3-3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 2l7.586 7.586" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit Profile
+            </button>
+            <button class="btn btn-outline" id="changePasswordBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Change Password
+            </button>
+          </div>
+        </div>
+        
+        <!-- Danger Zone Section -->
+        <div class="profile-section">
+          <h2 class="section-title">Danger Zone</h2>
+          <div class="info-item">
+            <div class="info-label">Account Actions</div>
+            <div class="info-value">Be careful with these actions as they cannot be undone.</div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M3 3l18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10.68 10.69a4 4 0 005.63 5.63" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.88 9.87a4 4 0 00-2.8 1.15l-1.72 1.71a4 4 0 000 5.65l5.34 5.34a4 4 0 005.66 0l1.72-1.71a4 4 0 001.15-2.81" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6.61 6.61L1.88 1.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3.27 7.96L2 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 2l2 1.27" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12.04 3.27L14 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Deactivate Account
+            </button>
+            <button class="btn btn-danger" id="logoutBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal" id="editProfileModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Profile</h3>
+        <button class="close-btn" id="closeEditModal">&times;</button>
+      </div>
+      <div class="file-upload">
+        <div class="file-upload-preview">
+          <img src="images/admin.jpg" alt="Profile Preview" id="profilePreview">
+        </div>
+        <div class="file-upload-btn btn btn-outline">
+          <span>Choose Profile Picture</span>
+          <input type="file" id="profileUpload" accept="image/*">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" class="form-control" value="Bright Amankwah-Opoku">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control" value="sirbright.amankwah@gmail.com">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" class="form-control" value="+233 20 177 4300">
+      </div>
+      <div class="form-group">
+        <label for="department">Department</label>
+        <input type="text" id="department" class="form-control" value="Human Resources">
+      </div>
+      <div class="form-group">
+        <label for="position">Position</label>
+        <input type="text" id="position" class="form-control" value="Internship Coordinator">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelEdit">Cancel</button>
+        <button class="btn btn-primary" id="saveProfile">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" id="changePasswordModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Password</h3>
+        <button class="close-btn" id="closePasswordModal">&times;</button>
+      </div>
+      <div class="form-group">
+        <label for="currentPassword">Current Password</label>
+        <input type="password" id="currentPassword" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm New Password</label>
+        <input type="password" id="confirmPassword" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelPassword">Cancel</button>
+        <button class="btn btn-primary" id="savePassword">Update Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Picture Upload Modal -->
+  <div class="modal" id="profilePicModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Profile Picture</h3>
+        <button class="close-btn" id="closePicModal">&times;</button>
+      </div>
+      <div class="file-upload">
+        <div class="file-upload-preview">
+          <img src="images/profile-placeholder.jpg" alt="Profile Preview" id="picPreview">
+        </div>
+        <div class="file-upload-btn btn btn-outline">
+          <span>Choose New Picture</span>
+          <input type="file" id="picUpload" accept="image/*">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelPic">Cancel</button>
+        <button class="btn btn-primary" id="savePic">Save Picture</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Profile dropdown functionality
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+      profileDropdown.classList.remove('open');
+    });
+
+    // Logout functionality
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', function() {
+      if (confirm('Are you sure you want to logout?')) {
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Modal functionality
+    const editProfileModal = document.getElementById('editProfileModal');
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const closeEditModal = document.getElementById('closeEditModal');
+    const cancelEdit = document.getElementById('cancelEdit');
+
+    editProfileBtn.addEventListener('click', () => {
+      editProfileModal.style.display = 'flex';
+    });
+
+    closeEditModal.addEventListener('click', () => {
+      editProfileModal.style.display = 'none';
+    });
+
+    cancelEdit.addEventListener('click', () => {
+      editProfileModal.style.display = 'none';
+    });
+
+    // Change Password Modal
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const closePasswordModal = document.getElementById('closePasswordModal');
+    const cancelPassword = document.getElementById('cancelPassword');
+
+    changePasswordBtn.addEventListener('click', () => {
+      changePasswordModal.style.display = 'flex';
+    });
+
+    closePasswordModal.addEventListener('click', () => {
+      changePasswordModal.style.display = 'none';
+    });
+
+    cancelPassword.addEventListener('click', () => {
+      changePasswordModal.style.display = 'none';
+    });
+
+    // Profile Picture Upload
+    const profilePicModal = document.getElementById('profilePicModal');
+    const editProfilePic = document.getElementById('editProfilePic');
+    const closePicModal = document.getElementById('closePicModal');
+    const cancelPic = document.getElementById('cancelPic');
+    const picUpload = document.getElementById('picUpload');
+    const picPreview = document.getElementById('picPreview');
+    const profileImg = document.getElementById('profileImg');
+    const headerProfileImg = document.getElementById('headerProfileImg');
+    const profilePreview = document.getElementById('profilePreview');
+    const profileUpload = document.getElementById('profileUpload');
+
+    editProfilePic.addEventListener('click', () => {
+      profilePicModal.style.display = 'flex';
+    });
+
+    closePicModal.addEventListener('click', () => {
+      profilePicModal.style.display = 'none';
+    });
+
+    cancelPic.addEventListener('click', () => {
+      profilePicModal.style.display = 'none';
+    });
+
+    // Profile picture upload in modal
+    picUpload.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          picPreview.src = event.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    // Profile picture upload in edit profile
+    profileUpload.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profilePreview.src = event.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    // Save profile picture
+    document.getElementById('savePic').addEventListener('click', function() {
+      if (picUpload.files && picUpload.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profileImg.src = event.target.result;
+          headerProfileImg.src = event.target.result;
+          localStorage.setItem('profilePicture', event.target.result);
+        }
+        reader.readAsDataURL(picUpload.files[0]);
+      }
+      profilePicModal.style.display = 'none';
+    });
+
+    // Save profile changes
+    document.getElementById('saveProfile').addEventListener('click', function() {
+      // In a real app, you would save these changes to a database
+      // For this demo, we'll just update the displayed values
+      document.querySelector('.profile-info h1').textContent = document.getElementById('fullName').value;
+      
+      // Update profile picture if changed
+      if (profileUpload.files && profileUpload.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profileImg.src = event.target.result;
+          headerProfileImg.src = event.target.result;
+          localStorage.setItem('profilePicture', event.target.result);
+        }
+        reader.readAsDataURL(profileUpload.files[0]);
+      }
+      
+      editProfileModal.style.display = 'none';
+    });
+
+    // Check for saved profile picture on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const savedPic = localStorage.getItem('profilePicture');
+      if (savedPic) {
+        profileImg.src = savedPic;
+        headerProfileImg.src = savedPic;
+        profilePreview.src = savedPic;
+      }
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+      if (event.target === editProfileModal) {
+        editProfileModal.style.display = 'none';
+      }
+      if (event.target === changePasswordModal) {
+        changePasswordModal.style.display = 'none';
+      }
+      if (event.target === profilePicModal) {
+        profilePicModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

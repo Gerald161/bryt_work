@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SICLife Interns</title>
+  <link rel="stylesheet" href="./css/intern.css">
+</head>
+<body>
+  <div class="dashboard-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-logo-container">
+        <img src="images/sic logo.jpg" alt="SICLife Logo" class="brand-logo">
+      </div>
+      <nav>
+        <a href="index.html">
+          <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M4 10v10h6v-6h4v6h6V10"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="intern.html" class="active">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="4"/><circle cx="17" cy="8" r="3"/><path d="M2 20v-1a4 4 0 014-4h4a4 4 0 014 4v1"/><path d="M17 20v-1a3 3 0 00-2-2.83"/></svg>
+          <span>Interns</span>
+        </a>
+        <a href="attendance.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Attendance</span>
+        </a>
+        <a href="report.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="9" y="8" width="4" height="12" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>
+          <span>Reports</span>
+        </a>
+        <a href="settings.html">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Top Navigation -->
+      <nav class="top-nav">
+        <div class="search-bar">
+          <input type="text" placeholder="Search interns...">
+        </div>
+        <div class="user-menu">
+          <div class="profile-dropdown" id="profileDropdown">
+            <button class="profile-btn" id="profileBtn">
+              <span class="profile-avatar" id="profile_avatar">BA</span>
+              <span class="profile-name" id="user_name">Bright Amankwah-Opoku</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Profile
+              </a>
+              <a href="settings.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Settings
+              </a>
+              <span id="logout_button" href="index.html">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Logout
+              </span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Content -->
+      <div class="content">
+        <a href="index.html" class="back-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to Dashboard
+        </a>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-carousel">
+            <img src="images/sic3.jpg" class="carousel-img active" alt="Team working together">
+            <img src="images/com1.jpg" class="carousel-img" alt="Interns learning">
+            <img src="images/COMA.jpg" class="carousel-img" alt="Team meeting">
+            <img src="images/com4.jpg" class="carousel-img" alt="Success celebration">
+            <div class="carousel-controls">
+              <span class="carousel-dot active" data-slide="0"></span>
+              <span class="carousel-dot" data-slide="1"></span>
+              <span class="carousel-dot" data-slide="2"></span>
+              <span class="carousel-dot" data-slide="3"></span>
+            </div>
+          </div>
+          <div class="hero-content">
+            <h1 class="hero-title">Intern Management</h1>
+            <p class="hero-desc">View, add, and update intern details</p>
+          </div>
+        </section>
+
+        <!-- Interns Panel -->
+        <section class="widget">
+          <h2 class="widget-title">Interns Panel</h2>
+          <button class="add-intern-btn" id="addInternBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Intern
+          </button>
+          <ul id="internList" class="intern-list"></ul>
+        </section>
+
+        <!-- Detail Panel -->
+        <section id="internDetailPanel" class="widget">
+          <div class="intern-detail-header">
+            <img id="detailPhoto" class="detail-avatar" src="">
+            <div>
+              <h2 id="detailName" class="detail-name"></h2>
+              <div id="detailPosition" class="detail-position"></div>
+            </div>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-group">
+              <div class="detail-label">Institution</div>
+              <div id="detailSchool" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Level</div>
+              <div id="detailLevel" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Duration</div>
+              <div id="detailDuration" class="detail-value"></div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Department</div>
+              <div id="detailDepartment" class="detail-value"></div>
+            </div>
+            <div class="detail-group detail-about">
+              <div class="detail-label">About</div>
+              <div id="detailAbout" class="detail-value"></div>
+            </div>
+            <div class="detail-group detail-about">
+              <div class="detail-label">Expectations</div>
+              <div id="detailExpectations" class="detail-value"></div>
+            </div>
+          </div>
+          
+          <!-- Uploads Section -->
+          <div class="uploads-section">
+            <h3 class="uploads-title">Uploaded Files</h3>
+            <div id="uploadedFiles" class="uploaded-files">
+              <!-- Files will be displayed here -->
+            </div>
+          </div>
+          
+          <div class="intern-actions">
+            <button class="upload-btn" id="uploadAssignmentBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Upload Assignment
+            </button>
+            <button class="upload-btn report" id="uploadReportBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Upload Report
+            </button>
+            <button class="edit-btn" id="editBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Edit Profile
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- File Upload Modal -->
+  <div class="file-upload-container" id="fileUploadModal">
+    <div class="file-upload-box">
+      <div class="file-upload-header">
+        <h3 class="file-upload-title" id="uploadModalTitle">Upload File</h3>
+        <button class="close-upload" id="closeUploadModal">&times;</button>
+      </div>
+      <div class="file-upload-content">
+        <form id="fileUploadForm">
+          <input type="hidden" id="uploadType">
+          <div class="form-group">
+            <label for="fileToUpload" class="file-upload-label">Select File</label>
+            <div class="file-upload-wrapper">
+              <button type="button" class="file-upload-button" id="fileUploadButton">Choose File</button>
+              <input type="file" id="fileToUpload" class="file-upload-input">
+            </div>
+            <div id="fileNameDisplay" class="file-name-display">No file chosen</div>
+          </div>
+          <div class="form-group" id="fileDescriptionGroup">
+            <label for="fileDescription" class="form-label">Description (Optional)</label>
+            <textarea id="fileDescription" class="form-control" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="file-upload-footer">
+        <button class="file-upload-btn cancel" id="cancelUpload">Cancel</button>
+        <button class="file-upload-btn submit" id="submitUpload">Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Intern Modal -->
+  <div class="modal-overlay" id="internFormModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="formTitle">Add Intern</h2>
+        <button class="close-modal" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="internForm">
+          <div class="form-group">
+            <label for="formName" class="form-label">Full Name</label>
+            <input type="text" id="formName" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="internPhotoUpload" class="form-label">Profile Photo</label>
+            <div class="file-upload-wrapper">
+              <button type="button" class="file-upload-button" id="photoUploadButton">Choose Photo</button>
+              <input type="file" id="internPhotoUpload" class="file-upload-input" accept="image/*">
+            </div>
+            <div id="photoNameDisplay" class="file-name-display">No photo chosen</div>
+          </div>
+          <div class="form-group">
+            <label for="formPosition" class="form-label">Position/Department</label>
+            <input type="text" id="formPosition" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="formSchool" class="form-label">Institution/School</label>
+            <input type="text" id="formSchool" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="formLevel" class="form-label">Level/Year</label>
+            <input type="text" id="formLevel" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="formDuration" class="form-label">Internship Duration</label>
+            <input type="text" id="formDuration" class="form-control" placeholder="e.g., 6 months (Jan - Jun 2023)" required>
+          </div>
+          <div class="form-group">
+            <label for="formAbout" class="form-label">About the Intern</label>
+            <textarea id="formAbout" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="formExpectations" class="form-label">Intern's Expectations</label>
+            <textarea id="formExpectations" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="formStatus" class="form-label">Status</label>
+            <select id="formStatus" class="form-control" required>
+              <option value="active">Active</option>
+              <option value="away">Away</option>
+              <option value="offline">Offline</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" id="cancelBtn">Cancel</button>
+        <button class="submit-btn" id="saveInternBtn">Save Intern</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/intern.js"></script>
+  <script src="./js/dashboard_info.js"></script>
+  <script src="./js/interns_info.js"></script>
+</body>
+
+</html>

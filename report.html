@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reports | SICLife Interns Tracker</title>
+  <style>
+    :root {
+      --primary: #FFD700; /* Vibrant yellow */
+      --primary-dark: #FFC000;
+      --primary-light: #FFF4D1;
+      --secondary: #f3f6f8; /* LinkedIn light gray */
+      --accent: #e1e9ee;
+      --text-dark: #000000; /* LinkedIn black */
+      --text-medium: #5e5e5e;
+      --text-light: #929292;
+      --white: #ffffff;
+      --border: #d6d6d6;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --radius: 8px;
+      --transition: all 0.3s ease;
+    }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--secondary);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+    .dashboard-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* LinkedIn Style Sidebar */
+    .sidebar {
+      width: 240px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+      transition: width 0.3s;
+      overflow-y: auto;
+    }
+    .brand-logo-container {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .brand-logo {
+      max-height: 50px;
+      width: auto;
+    }
+    .sidebar nav {
+      padding: 20px 0;
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      color: var(--text-medium);
+      text-decoration: none;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+    .sidebar nav a:hover, 
+    .sidebar nav a.active {
+      color: var(--text-dark);
+      background-color: var(--primary-light);
+      border-left: 3px solid var(--primary);
+    }
+    .sidebar nav svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      stroke: currentColor;
+    }
+    .sidebar nav span {
+      font-size: 0.95rem;
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: 240px;
+      background-color: var(--secondary);
+    }
+
+    /* LinkedIn Style Top Navigation */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: var(--white);
+      padding: 12px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .search-bar {
+      flex-grow: 1;
+      max-width: 500px;
+      margin: 0 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      background-color: var(--secondary);
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .profile-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+      border: 2px solid var(--primary-dark);
+    }
+    .profile-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .dropdown-menu {
+      position: absolute;
+      right: 30px;
+      top: 60px;
+      background: var(--white);
+      width: 200px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px 0;
+      display: none;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      color: var(--text-medium);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .dropdown-menu a:hover {
+      background-color: var(--primary-light);
+      color: var(--text-dark);
+    }
+    .dropdown-menu svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      stroke: currentColor;
+    }
+    .profile-dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    /* LinkedIn Style Content Area */
+    .content {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    /* Reports Main Section */
+    .reports-main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* LinkedIn Style Report Cards */
+    .report-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      transition: var(--transition);
+    }
+    .report-card:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .report-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .report-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-right: 15px;
+      border: 2px solid var(--primary-dark);
+    }
+    .report-user-info {
+      flex: 1;
+    }
+    .report-user-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+    }
+    .report-user-position {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .report-date {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .report-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+    }
+    .report-content {
+      color: var(--text-medium);
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    .report-image {
+      width: 100%;
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      max-height: 300px;
+      object-fit: cover;
+    }
+    .report-stats {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 15px;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+    .stat-item svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+      stroke: currentColor;
+    }
+    .report-actions {
+      display: flex;
+      justify-content: space-around;
+    }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      padding: 8px 15px;
+      color: var(--text-medium);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+    .action-btn:hover {
+      background-color: var(--primary-light);
+      color: var(--text-dark);
+    }
+    .action-btn svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      stroke: currentColor;
+    }
+
+    /* Right Sidebar - LinkedIn Style */
+    .right-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .widget {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .widget-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .filter-btn {
+      padding: 8px 12px;
+      border-radius: 15px;
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      color: var(--text-medium);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--text-dark);
+      border-color: var(--primary-dark);
+    }
+    .recent-activity {
+      list-style: none;
+    }
+    .activity-item {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: var(--text-dark);
+    }
+    .activity-content {
+      flex: 1;
+    }
+    .activity-text {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+    .activity-time {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 3px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+      .right-sidebar {
+        grid-row: 3;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      .sidebar nav span {
+        display: none;
+      }
+      .sidebar nav a {
+        justify-content: center;
+        padding: 15px 0;
+      }
+      .sidebar nav svg {
+        margin-right: 0;
+      }
+      .main {
+        margin-left: 70px;
+      }
+      .top-nav {
+        padding: 15px;
+      }
+      .search-bar {
+        margin: 0 10px;
+      }
+      .profile-name {
+        display: none;
+      }
+    }
+    @media (max-width: 576px) {
+      .content {
+        padding: 15px;
+      }
+      .report-actions {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .action-btn {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-logo-container">
+        <img src="images/sic logo.jpg" alt="SICLife Logo" class="brand-logo">
+      </div>
+      
+      <nav>
+        <a href="index.html">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 11.5 12 4l9 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 10v10h6v-6h4v6h6V10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="intern.html">
+          <svg viewBox="0 0 24 24">
+            <circle cx="8" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="17" cy="8" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 20v-1a4 4 0 014-4h4a4 4 0 014 4v1" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17 20v-1a3 3 0 00-2-2.83" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Interns</span>
+        </a>
+        <a href="attendance.html">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Attendance</span>
+        </a>
+        <a href="#">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="12" width="4" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="9" y="8" width="4" height="12" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="15" y="4" width="4" height="16" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Reports</span>
+        </a>
+        <a href="settings.html">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4a1.65 1.65 0 00-1.32.76h0a1.65 1.65 0 00-.38 1.39V22a2 2 0 01-4 0v-.07a1.65 1.65 0 00-.38-1.39h0A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82-.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-.76-1.32h0A1.65 1.65 0 002.45 12V12a2 2 0 010-4v-.07a1.65 1.65 0 00.76-1.32h0A1.65 1.65 0 004.6 8.6l.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001.32-.76h0A1.65 1.65 0 0012 2.45V2a2 2 0 014 0v.07a1.65 1.65 0 001.32.76h0A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 00.76 1.32h0A1.65 1.65 0 0021.55 12V12a2 2 0 010 4z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Top Navigation Bar -->
+      <nav class="top-nav">
+        <div class="search-bar">
+          <input type="text" placeholder="Search reports...">
+        </div>
+        <div class="user-menu">
+          <div class="profile-dropdown" id="profileDropdown">
+            <button class="profile-btn" id="profileBtn">
+              <span class="profile-avatar">BA</span>
+              <span class="profile-name">Bright Amankwah-Opoku</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20v-1a4 4 0 014-4h8a4 4 0 014 4v1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Profile
+              </a>
+              <a href="settings.html">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06A1.65 1.65 0 0015 19.4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Settings
+              </a>
+              <a href="login.html">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Logout
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <!-- Reports Main Section -->
+        <section class="reports-main">
+          <!-- Report Card 1 -->
+          <div class="report-card">
+            <div class="report-header">
+              <div class="report-avatar">JD</div>
+              <div class="report-user-info">
+                <div class="report-user-name">John Doe</div>
+                <div class="report-user-position">Marketing Intern</div>
+              </div>
+              <div class="report-date">June 15, 2023</div>
+            </div>
+            <h3 class="report-title">Weekly Marketing Campaign Report</h3>
+            <p class="report-content">
+              This week's report covers our social media campaign performance across all platforms. 
+              We've seen a 15% increase in engagement compared to last week, with Instagram 
+              performing particularly well. The new content strategy is showing promising results.
+            </p>
+            <img src="images/report1.jpg" alt="Marketing report charts" class="report-image">
+            <div class="report-stats">
+              <div class="stat-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                124 Views
+              </div>
+              <div class="stat-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                8 Comments
+              </div>
+              <div class="stat-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Approved
+              </div>
+            </div>
+            <div class="report-actions">
+              <a href="#" class="action-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 10c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zM2 18v-1c0-2.8 2.2-5 5-5h6c2.8 0 5 2.2 5 5v1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M19 4a2 2 0 00-2-2h-2a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2V4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                View Full Report
+              </a>
+              <a href="#" class="action-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Add Comment
+              </a>
+              <a href="#" class="action-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download
+              </a>
+            </div>
+          </div>
+          
+          <!-- Report Card 2 -->
+          <div class="report-card">
+            <div class="report-header">
+              <div class="report-avatar">AS</div>
+              <div class="report-user-info">
+                <div class="report-user-name">Alice Smith</div>
+                <div class="report-user-position">IT Intern</div>
+              </div>
+              <div class="report-date">June 14, 2023</div>
+            </div>
+            <h3 class="report-title">IT Infrastructure Assessment</h3>
+            <p class="report-content">
+              Completed assessment of current IT infrastructure with recommendations for upgrades. 
+              Identified 3 critical security vulnerabilities that need immediate attention. 
+              Proposed timeline and budget for phased implementation of improvements.
+            </p>
+            <img src="images/report2.jpg" alt="IT infrastructure diagram" class="report-image">
+            <div class="report-stats">
+              <div class="stat-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                89 Views
+              </div>
+              <div class="stat-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                5 Comments
+              </div>
+              <div class="stat-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Under Review
+              </div>
+            </div>
+            <div class="report-actions">
+              <a href="#" class="action-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 10c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zM2 18v-1c0-2.8 2.2-5 5-5h6c2.8 0 5 2.2 5 5v1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M19 4a2 2 0 00-2-2h-2a2 2 0 00-2 2v14a2 2 0 002 2h2a2 2 0 002-2V4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                View Full Report
+              </a>
+              <a href="#" class="action-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Add Comment
+              </a>
+              <a href="#" class="action-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download
+              </a>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+          <!-- Filters Widget -->
+          <div class="widget">
+            <h2 class="widget-title">Filter Reports</h2>
+            <div class="filter-options">
+              <button class="filter-btn active">All</button>
+              <button class="filter-btn">Weekly</button>
+              <button class="filter-btn">Monthly</button>
+              <button class="filter-btn">Performance</button>
+              <button class="filter-btn">Approved</button>
+              <button class="filter-btn">Pending</button>
+              <button class="filter-btn">Recent</button>
+              <button class="filter-btn">Popular</button>
+            </div>
+          </div>
+          
+          <!-- Recent Activity Widget -->
+          <div class="widget">
+            <h2 class="widget-title">Recent Activity</h2>
+            <ul class="recent-activity">
+              <li class="activity-item">
+                <div class="activity-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-text">John Doe submitted weekly report</div>
+                  <div class="activity-time">2 hours ago</div>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-text">New intern Maria Brown joined</div>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 19l7-7 3 3-7 7-3-3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 2l7.586 7.586" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-text">Performance review scheduled</div>
+                  <div class="activity-time">2 days ago</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Profile dropdown functionality
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+      profileDropdown.classList.remove('open');
+    });
+
+    // Filter buttons functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMe Login</title>
+    <!-- LOCAL FONTS: Place Poppins-Regular.woff2 in a 'fonts' folder -->
+    <style>
+        @font-face {
+            font-family: 'Poppins';
+            src: url('fonts/Poppins-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+        :root {
+            --primary-color: #004d40;
+            --accent-color: #ffc107;
+            --light-bg: #f5f7fa;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --white-color: #ffffff;
+            --border-color: #dee2e6;
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            --border-radius: 0.75rem;
+            --font-family-base: 'Poppins', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--white-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* Carousel Styles */
+        .carousel-section {
+            background: var(--primary-color);
+            flex: 1 1 300px;
+            min-width: 250px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .carousel-images {
+            width: 90%;
+            max-width: 360px;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+            border: 2px solid #fff; /* <-- White border */
+        }
+        .carousel-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            transition: opacity 0.4s;
+            border-radius: 0.5rem;
+        }
+        .carousel-images img.active {
+            display: block;
+        }
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0; right: 0;
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 360px;
+            transform: translateY(-50%);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .carousel-btn {
+            background: rgba(255,255,255,0.82);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            transition: background 0.2s;
+            pointer-events: auto;
+            user-select: none;
+        }
+        .carousel-btn:hover {
+            background: var(--accent-color);
+            color: #222;
+        }
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+            gap: 6px;
+        }
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent-color);
+            opacity: 0.6;
+            cursor: pointer;
+            transition: opacity 0.2s, background 0.2s;
+        }
+        .carousel-dot.active {
+            background: var(--accent-color);
+            opacity: 1;
+        }
+        .carousel-caption {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin: 0.5rem 0 1rem 0;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        /* Form Section */
+        .form-section {
+            flex: 1 1 350px;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-logo-container {
+            text-align: center;
+            margin-bottom: 1.3rem;
+        }
+        .brand-logo {
+            max-height: 50px;
+            width: auto;
+            border-radius: 0.5rem;
+            border: 1px solid #eee;
+        }
+
+        .form-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .form-subtitle {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-control {
+            width: 100%;
+            max-width: 320px;
+            height: 38px;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            padding: 0 0.9rem;
+            margin-bottom: 1.1rem;
+            font-size: 1rem;
+            background: #f8fafc;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-control:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* NEW: Password toggle styles */
+        .password-input-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+        }
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border: none;
+            color: var(--white-color);
+            padding: 0.65rem 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            max-width: 320px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-primary-custom:hover {
+            background-color: #00382e;
+        }
+
+        .link-accent {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .link-accent:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .form-wrapper {
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .form-wrapper.d-none {
+            opacity: 0;
+            transform: scale(0.95);
+            display: block !important;
+            pointer-events: none;
+            position: absolute;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            width: 100%;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .mb-4 { margin-bottom: 1.2rem;}
+        .mb-3 { margin-bottom: 0.8rem;}
+        .mb-0 { margin-bottom: 0;}
+        .d-grid { display: grid;}
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .login-container { flex-direction: column; }
+            .carousel-section, .form-section { min-width: 100%; }
+            .carousel-section { min-height: 180px; padding: 1rem 0; }
+        }
+        @media (max-width: 600px) {
+            .form-section { padding: 1.1rem 0.2rem; }
+            .carousel-images { max-width: 98vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Carousel Section -->
+        <div class="carousel-section">
+            <div class="carousel-images" id="carouselImages">
+                <!-- Replace/add your images below -->
+                <img src="images/com4.jpg" alt="Team Collaboration" class="active">
+                <img src="images/com2.jpg" alt="Planning Session">
+                <img src="images/com1.jpg" alt="Mentorship">
+            </div>
+            <div class="carousel-controls">
+                <button type="button" class="carousel-btn" id="carouselPrev" aria-label="Previous">&#8592;</button>
+                <button type="button" class="carousel-btn" id="carouselNext" aria-label="Next">&#8594;</button>
+            </div>
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+            <div class="carousel-caption">Welcome to Intern Track-Me</div>
+        </div>
+        <!-- Form Section -->
+        <div class="form-section">
+            <div class="brand-logo-container">
+                <img src="images/sic logo.jpg" alt="SIGLife Logo" class="brand-logo">
+            </div>
+            <!-- Login Form -->
+            <div id="login-form-container" class="form-wrapper">
+                <h2 class="form-title">INTERN TRACK-ME</h2>
+                <div class="form-subtitle">Sign in to continue to your account</div>
+                <form id="signin_form" action="" method="GET">
+                    <label for="loginEmail" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="loginEmail" required>
+                    <p id="email_error" style="color: red; text-align: center;"></p>
+                    <label for="loginPassword" class="form-label">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" class="form-control" id="loginPassword" required>
+                        <button type="button" class="password-toggle" aria-label="Show password">👁️</button>
+                    </div>
+                    <p id="password_error" style="color: red; text-align: center;"></p>
+                    <div class="mb-4 d-grid">
+                        <button type="submit" class="btn-primary-custom">Sign In</button>
+                    </div>
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account? <a id="show-register-form" class="link-accent">Create one</a></p>
+                    </div>
+                </form>
+            </div>
+            <!-- Registration Form -->
+            <div id="register-form-container" class="form-wrapper d-none">
+                <h2 class="form-title">Create Account</h2>
+                <div class="form-subtitle">Get started with your new account</div>
+                <form id="registrationForm">
+                    <label for="registerName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="registerName" required>
+                    <label for="registerEmail" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="registerEmail" required>
+                    <label for="registerPassword" class="form-label">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" class="form-control" id="registerPassword" required>
+                        <button type="button" class="password-toggle" aria-label="Show password">👁️</button>
+                    </div>
+                    <div class="mb-4 d-grid">
+                        <button type="submit" class="btn-primary-custom">Create Account</button>
+                    </div>
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a id="show-login-form" class="link-accent">Sign In</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Offline JS: Carousel + form toggle -->
+    <script>
+        // Carousel logic
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carousel
+            const carouselImages = document.querySelectorAll('#carouselImages img');
+            const indicators = document.getElementById('carouselIndicators');
+            let current = 0;
+            let intervalId = null;
+
+            // Build indicators
+            indicators.innerHTML = '';
+            carouselImages.forEach((img, idx) => {
+                const dot = document.createElement('span');
+                dot.classList.add('carousel-dot');
+                if (idx === 0) dot.classList.add('active');
+                dot.dataset.idx = idx;
+                dot.addEventListener('click', function() {
+                    showSlide(idx);
+                });
+                indicators.appendChild(dot);
+            });
+
+            function showSlide(idx) {
+                carouselImages[current].classList.remove('active');
+                indicators.children[current].classList.remove('active');
+                current = idx;
+                carouselImages[current].classList.add('active');
+                indicators.children[current].classList.add('active');
+            }
+
+            document.getElementById('carouselPrev').onclick = function() {
+                let newIdx = current - 1;
+                if (newIdx < 0) newIdx = carouselImages.length - 1;
+                showSlide(newIdx);
+                resetInterval();
+            };
+            document.getElementById('carouselNext').onclick = function() {
+                let newIdx = (current + 1) % carouselImages.length;
+                showSlide(newIdx);
+                resetInterval();
+            };
+
+            function autoSlide() {
+                let newIdx = (current + 1) % carouselImages.length;
+                showSlide(newIdx);
+            }
+            function resetInterval() {
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(autoSlide, 5000);
+            }
+            // Start auto sliding
+            resetInterval();
+
+            // Form toggle logic
+            const loginContainer = document.getElementById('login-form-container');
+            const registerContainer = document.getElementById('register-form-container');
+            const showRegisterLink = document.getElementById('show-register-form');
+            const showLoginLink = document.getElementById('show-login-form');
+            const registrationForm = document.getElementById('registrationForm');
+
+            if (showRegisterLink) {
+                showRegisterLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loginContainer.classList.add('d-none');
+                    registerContainer.classList.remove('d-none');
+                });
+            }
+
+            if (showLoginLink) {
+                showLoginLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    registerContainer.classList.add('d-none');
+                    loginContainer.classList.remove('d-none');
+                });
+            }
+
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Account created successfully! Please log in.');
+                    registrationForm.reset();
+                    registerContainer.classList.add('d-none');
+                    loginContainer.classList.remove('d-none');
+                });
+            }
+
+            // NEW: Password toggle functionality
+            document.querySelectorAll('.password-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const passwordInput = this.previousElementSibling;
+                    const isPassword = passwordInput.type === 'password';
+                    
+                    passwordInput.type = isPassword ? 'text' : 'password';
+                    this.textContent = isPassword ? '🙈' : '👁️';
+                    this.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+                });
+            });
+        });
+    </script>
+    <script src="./js/signin.js"></script>
+</body>
+</html>
