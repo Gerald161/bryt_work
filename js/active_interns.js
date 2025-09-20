@@ -31,7 +31,7 @@ activeInterns.forEach((intern)=>{
     <img src="${intern.photo}" class="intern-avatar" alt="">
     <div class="intern-info">
         <div class="intern-name">${intern.name}</div>
-        <div class="intern-position">Marketing Intern</div>
+        <div class="intern-position">${intern.position}</div>
     </div>
     <div class="intern-status"></div>
     </li>

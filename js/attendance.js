@@ -5,8 +5,6 @@ const employees = submissions.map((sub, index) => ({
     name: sub.name
 }));
 
-console.log(submissions)
-
 // Attendance data storage
 let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || [];
 
@@ -30,10 +28,7 @@ function initApp() {
     loadWeeklyAttendance();
     loadMonthlyCalendar();
 
-    // Set up mobile action buttons
-    document.getElementById('mobileMarkAttendanceBtn').addEventListener('click', function() {
-    document.getElementById('markAttendanceBtn').click();
-    });
+    
 }
 
 // Load daily attendance data

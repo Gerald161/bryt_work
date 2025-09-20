@@ -4,60 +4,80 @@ const loginPassword = document.querySelector("#loginPassword");
 const email_error = document.querySelector("#email_error");
 const password_error = document.querySelector("#password_error");
 
-const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+// Check if user is already logged in
+const loggedIn = JSON.parse(localStorage.getItem("loggedIn"));
 
-if(loggedInUser){
+if(loggedIn){
     window.location.href = "dashboard.html";
 }
 
-var allUsers = [
-    {
-        name: "Bright Amankwah Opoku",
-        email: "b@mail.com",
-        image: "",
-        password: "abcd"
-    },
-    {
-        name: "Second User",
-        email: "second@mail.com",
-        image: "",
-        password: "1234"
+// Default user data (used if no user exists in localStorage)
+const defaultUser = {
+    name: "Bright Amankwah Opoku",
+    email: "b@mail.com",
+    photo: "",
+    password: "123456",
+    phone: "0200",
+    department: "math",
+    position: "Admin",
+    employee_id: "001"
+};
+
+// Function to get user data (from localStorage or default)
+function getUserData() {
+    const savedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    
+    // If no saved user, use default user and save it
+    if (!savedUser) {
+        localStorage.setItem("userData", JSON.stringify(defaultUser));
+        return defaultUser;
     }
-];
+    
+    return savedUser;
+}
+
+// Function to update user data in localStorage
+function updateUserData(updatedUser) {
+    localStorage.setItem("userData", JSON.stringify(updatedUser));
+}
 
 signin_form.addEventListener("submit", (e) => {
     e.preventDefault();
-
-    const passwordRegex = /^.{4,}$/;
-
+    
+    const passwordRegex = /^.{6,}$/;
     if (!passwordRegex.test(loginPassword.value)) {
-        password_error.innerHTML = `Please enter at least 4 characters`;
+        password_error.innerHTML = `Please enter at least 6 characters`;
         return;
     } else {
         password_error.innerHTML = ``;
     }
-
-    // Check if email exists
-    const user = allUsers.find((u) => u.email === loginEmail.value);
-
-    if (!user) {
+    
+    // Get the single user data
+    const user = getUserData();
+    
+    // Check if email matches
+    if (user.email !== loginEmail.value) {
         email_error.innerHTML = `Email not found`;
         password_error.innerHTML = ``; // clear password error
         return;
     } else {
         email_error.innerHTML = ``;
     }
-
-    // Check password for that user
+    
+    // Check password
     if (user.password !== loginPassword.value) {
         password_error.innerHTML = `Wrong password`;
         return;
     }
-
+    
     // Successful login
     password_error.innerHTML = ``;
-
+    
+    // Save the logged-in user to localStorage
     localStorage.setItem("loggedInUser", JSON.stringify(user));
 
+    localStorage.setItem("loggedIn", JSON.stringify(user));
+    
+    // Redirect to dashboard
     window.location.href = "dashboard.html";
 });

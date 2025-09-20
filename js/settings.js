@@ -1,6 +1,58 @@
 let isEditing = false;
 let originalValues = {};
 
+// Initialize profile data structure
+function initializeProfileData() {
+    const defaultProfile = {
+        name: "Bright Amankwah Opoku",
+        email: "b@mail.com",
+        photo: "",
+        password: "123456",
+        phone: "0200",
+        department: "math",
+        position: "Admin",
+        employee_id: "001"
+    };
+    
+    let profileData = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!profileData) {
+        localStorage.setItem("loggedInUser", JSON.stringify(defaultProfile));
+        profileData = defaultProfile;
+    }
+    return profileData;
+}
+
+// Save profile data to localStorage
+function saveProfileData(updatedData) {
+    const currentProfile = JSON.parse(localStorage.getItem("loggedInUser")) || {};
+    const updatedProfile = { ...currentProfile, ...updatedData };
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedProfile));
+}
+
+// Load profile data from localStorage and populate fields
+function loadProfileData() {
+    const profileData = initializeProfileData();
+    
+    document.getElementById('fullName').value = profileData.name || '';
+    document.getElementById('email').value = profileData.email || '';
+    document.getElementById('phone').value = profileData.phone || '';
+    document.getElementById('department').value = profileData.department || '';
+    document.getElementById('position').value = profileData.position || '';
+    document.getElementById('employeeId').value = profileData.employee_id || '';
+    
+    // Update display name in header if it exists
+    const displayNameElement = document.getElementById('displayName');
+    if (displayNameElement) {
+        displayNameElement.textContent = profileData.name || 'User Name';
+    }
+    
+    // Update profile image if it exists
+    if (profileData.photo) {
+        document.getElementById('profileImage').src = profileData.photo;
+    }
+}
+
 // Store original values
 function storeOriginalValues() {
     originalValues = {
@@ -15,6 +67,7 @@ function storeOriginalValues() {
 
 // Initialize original values on page load
 window.onload = function() {
+    loadProfileData();
     storeOriginalValues();
 };
 
@@ -68,11 +121,42 @@ function saveChanges() {
         return;
     }
 
+    // Prepare data to save to localStorage
+    const updatedData = {
+        name: fullName,
+        email: email,
+        phone: document.getElementById('phone').value.trim(),
+        department: document.getElementById('department').value.trim(),
+        position: document.getElementById('position').value.trim(),
+        employee_id: document.getElementById('employeeId').value.trim()
+    };
+
+    // Save to localStorage
+    saveProfileData(updatedData);
+
     // Save the changes (update original values)
     storeOriginalValues();
     
     // Update display name in header
     document.getElementById('displayName').textContent = fullName;
+
+    var profile_role = document.querySelector(".profile-role");
+
+    profile_role.innerHTML = updatedData.position
+
+    const user_name = document.querySelector("#user_name");
+
+    const profile_avatar = document.querySelector("#profile_avatar");
+
+    user_name.innerHTML = updatedData.name
+
+    const initials = updatedData.name
+        .split(" ")
+        .map(word => word[0])
+        .join("")
+        .toUpperCase();  
+
+    profile_avatar.innerHTML = initials;
     
     // Exit editing mode
     const fields = ['fullName', 'email', 'phone', 'department', 'position', 'employeeId'];
@@ -117,11 +201,17 @@ function handleImageUpload(event) {
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            document.getElementById('profileImage').src = e.target.result;
+            const base64Image = e.target.result;
+            
+            // Update the profile image display
+            document.getElementById('profileImage').src = base64Image;
+            
+            // Save photo to localStorage immediately
+            saveProfileData({ photo: base64Image });
+            
+            alert('Profile image updated successfully!');
         };
         reader.readAsDataURL(file);
-        
-        alert('Profile image updated successfully!');
     }
 }
 
@@ -144,6 +234,10 @@ function changePassword(event) {
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     
+    // Get current stored password
+    const profileData = JSON.parse(localStorage.getItem("loggedInUser"));
+    const storedPassword = profileData.password;
+    
     // Validate passwords
     if (newPassword !== confirmPassword) {
         alert('New passwords do not match');
@@ -160,13 +254,17 @@ function changePassword(event) {
         return;
     }
     
-    // Simulate password change (in real app, this would be an API call)
-    if (currentPassword === 'oldpassword' || confirm('Are you sure you want to change your password?')) {
-        alert('Password changed successfully!');
-        closePasswordModal();
-    } else {
+    // Verify current password
+    if (currentPassword !== storedPassword) {
         alert('Current password is incorrect');
+        return;
     }
+    
+    // Save new password to localStorage
+    saveProfileData({ password: newPassword });
+    
+    alert('Password changed successfully!');
+    closePasswordModal();
 }
 
 // Close modal when clicking outside
@@ -182,3 +280,22 @@ document.addEventListener('keydown', function(event) {
         closePasswordModal();
     }
 });
+
+let storedData = JSON.parse(localStorage.getItem("submissions"));
+
+const interns_count = document.querySelector("#interns_count");
+const active_interns_count = document.querySelector("#active_interns_count");
+
+var profile_role = document.querySelector(".profile-role");
+
+var currentDetails = JSON.parse(localStorage.getItem("loggedInUser"))
+
+profile_role.innerHTML = currentDetails.position
+
+if (storedData && interns_count) {
+    interns_count.innerHTML = storedData.length;
+}
+
+if (storedData && active_interns_count) {
+    active_interns_count.innerHTML = storedData.filter(intern => intern.status === "active").length;
+}
