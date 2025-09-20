@@ -14,10 +14,10 @@ if(loggedIn){
 // Default user data (used if no user exists in localStorage)
 const defaultUser = {
     name: "Bright Amankwah Opoku",
-    email: "b@mail.com",
+    email: "bright@mail.com",
     photo: "",
     password: "123456",
-    phone: "0200",
+    phone: "0200000000",
     department: "math",
     position: "Admin",
     employee_id: "001"

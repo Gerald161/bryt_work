@@ -28,7 +28,11 @@ if (storedData && Array.isArray(storedData)) {
 activeInterns.forEach((intern)=>{
     internList.innerHTML += `
     <li class="intern-item">
-    <img src="${intern.photo}" class="intern-avatar" alt="">
+    ${
+        storedData !== null ?
+        `<img src="${intern.photo}" class="intern-avatar" alt="">` :
+        `<div class="intern-avatar">${intern.initials}</div>`
+    }
     <div class="intern-info">
         <div class="intern-name">${intern.name}</div>
         <div class="intern-position">${intern.position}</div>
