@@ -47,73 +47,73 @@ document.addEventListener('click', () => {
 
 // Intern data
 let interns = [
-    {
-    name: "Emmanuel Osei",
-    photo: "images/sic3.jpg",
-    position: "Marketing Intern",
-    school: "University of Ghana",
-    level: "Level 300",
-    duration: "6 months (Jan - Jun 2023)",
-    about: "Passionate about marketing strategies with strong analytical skills. Demonstrated excellent teamwork abilities and creative thinking in campaign development.",
-    expectations: "To gain practical experience in digital marketing strategies, understand consumer behavior in the insurance industry, and develop professional networking skills.",
-    status: "active",
-    files: [
-        { type: "assignment", name: "Marketing Campaign.pdf", date: "2023-04-15" },
-        { type: "report", name: "Monthly Report.docx", date: "2023-05-01" }
-    ]
-    },
-    {
-    name: "Ackah Samuel",
-    photo: "images/com1.jpg",
-    position: "IT Intern",
-    school: "KNUST",
-    level: "Level 400",
-    duration: "3 months (May - Aug 2023)",
-    about: "Tech enthusiast with expertise in web development and database management. Has shown exceptional problem-solving skills in IT projects.",
-    expectations: "To apply academic knowledge in a corporate IT environment, gain experience with enterprise systems, and contribute to software development projects.",
-    status: "away",
-    files: [
-        { type: "assignment", name: "Database Design.pdf", date: "2023-06-10" }
-    ]
-    },
-    {
-    name: "David David",
-    photo: "images/COMA.jpg",
-    position: "Finance Intern",
-    school: "Ashesi University",
-    level: "Level 200",
-    duration: "1 year (Sep 2022 - Aug 2023)",
-    about: "Accounting student with a keen interest in financial analysis. Has shown strong numerical skills and attention to detail in financial reporting tasks.",
-    expectations: "To understand financial operations in the insurance sector, learn about investment strategies, and develop practical accounting skills beyond textbook knowledge.",
-    status: "offline",
-    files: []
-    },
-    {
-    name: "Stephen Sasu",
-    photo: "images/com4.jpg",
-    position: "HR Intern",
-    school: "University of Cape Coast",
-    level: "Level 300",
-    duration: "4 months (Mar - Jun 2023)",
-    about: "Human resource management student with excellent interpersonal skills. Has shown initiative in organizing employee engagement activities.",
-    expectations: "To gain hands-on experience in recruitment processes, employee relations, and HR policy implementation in a corporate setting.",
-    status: "active",
-    files: [
-        { type: "report", name: "HR Policy Review.docx", date: "2023-04-20" }
-    ]
-    },
-    {
-    name: "Grace Mensah",
-    photo: "images/sic3.jpg",
-    position: "Actuarial Intern",
-    school: "GIMPA",
-    level: "Level 100",
-    duration: "4 months (Mar - Jun 2023)",
-    about: "Creative thinker with strong analytical skills, interested in actuarial science and risk assessment.",
-    expectations: "To apply statistical models in real-world insurance scenarios and gain insight into the actuarial profession.",
-    status: "active",
-    files: []
-    }
+    // {
+    // name: "Emmanuel Osei",
+    // photo: "images/sic3.jpg",
+    // position: "Marketing Intern",
+    // school: "University of Ghana",
+    // level: "Level 300",
+    // duration: "6 months (Jan - Jun 2023)",
+    // about: "Passionate about marketing strategies with strong analytical skills. Demonstrated excellent teamwork abilities and creative thinking in campaign development.",
+    // expectations: "To gain practical experience in digital marketing strategies, understand consumer behavior in the insurance industry, and develop professional networking skills.",
+    // status: "active",
+    // files: [
+    //     { type: "assignment", name: "Marketing Campaign.pdf", date: "2023-04-15" },
+    //     { type: "report", name: "Monthly Report.docx", date: "2023-05-01" }
+    // ]
+    // },
+    // {
+    // name: "Ackah Samuel",
+    // photo: "images/com1.jpg",
+    // position: "IT Intern",
+    // school: "KNUST",
+    // level: "Level 400",
+    // duration: "3 months (May - Aug 2023)",
+    // about: "Tech enthusiast with expertise in web development and database management. Has shown exceptional problem-solving skills in IT projects.",
+    // expectations: "To apply academic knowledge in a corporate IT environment, gain experience with enterprise systems, and contribute to software development projects.",
+    // status: "away",
+    // files: [
+    //     { type: "assignment", name: "Database Design.pdf", date: "2023-06-10" }
+    // ]
+    // },
+    // {
+    // name: "David David",
+    // photo: "images/COMA.jpg",
+    // position: "Finance Intern",
+    // school: "Ashesi University",
+    // level: "Level 200",
+    // duration: "1 year (Sep 2022 - Aug 2023)",
+    // about: "Accounting student with a keen interest in financial analysis. Has shown strong numerical skills and attention to detail in financial reporting tasks.",
+    // expectations: "To understand financial operations in the insurance sector, learn about investment strategies, and develop practical accounting skills beyond textbook knowledge.",
+    // status: "offline",
+    // files: []
+    // },
+    // {
+    // name: "Stephen Sasu",
+    // photo: "images/com4.jpg",
+    // position: "HR Intern",
+    // school: "University of Cape Coast",
+    // level: "Level 300",
+    // duration: "4 months (Mar - Jun 2023)",
+    // about: "Human resource management student with excellent interpersonal skills. Has shown initiative in organizing employee engagement activities.",
+    // expectations: "To gain hands-on experience in recruitment processes, employee relations, and HR policy implementation in a corporate setting.",
+    // status: "active",
+    // files: [
+    //     { type: "report", name: "HR Policy Review.docx", date: "2023-04-20" }
+    // ]
+    // },
+    // {
+    // name: "Grace Mensah",
+    // photo: "images/sic3.jpg",
+    // position: "Actuarial Intern",
+    // school: "GIMPA",
+    // level: "Level 100",
+    // duration: "4 months (Mar - Jun 2023)",
+    // about: "Creative thinker with strong analytical skills, interested in actuarial science and risk assessment.",
+    // expectations: "To apply statistical models in real-world insurance scenarios and gain insight into the actuarial profession.",
+    // status: "active",
+    // files: []
+    // }
 ];
 
 let storedData = JSON.parse(localStorage.getItem("submissions"));

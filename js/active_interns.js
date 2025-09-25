@@ -7,18 +7,18 @@ const interns_count = document.querySelector("#interns-count");
 const active_interns_count = document.querySelector("#active_interns_count");
 
 let activeInterns = [
-    {
-        name: "Emmanuel Osei",
-        position: "Marketing Intern",
-        status: "normal",
-        initials: "EO"
-    },
-    {
-        name: "Ackah Samuel",
-        position: "IT Intern",
-        status: "away",
-        initials: "AS"
-    },
+    // {
+    //     name: "Emmanuel Osei",
+    //     position: "Marketing Intern",
+    //     status: "normal",
+    //     initials: "EO"
+    // },
+    // {
+    //     name: "Ackah Samuel",
+    //     position: "IT Intern",
+    //     status: "away",
+    //     initials: "AS"
+    // },
 ]
 
 if (storedData && Array.isArray(storedData)) {
