@@ -26,6 +26,9 @@ if (storedData && Array.isArray(storedData)) {
 }
 
 activeInterns.forEach((intern)=>{
+    const statusClass = intern.status === "active" ? "" : 
+    intern.status === "away" ? "away" : "offline";
+
     internList.innerHTML += `
     <li class="intern-item">
     ${
@@ -37,7 +40,7 @@ activeInterns.forEach((intern)=>{
         <div class="intern-name">${intern.name}</div>
         <div class="intern-position">${intern.position}</div>
     </div>
-    <div class="intern-status"></div>
+    <div class="intern-status ${statusClass}"></div>
     </li>
 `
 })
